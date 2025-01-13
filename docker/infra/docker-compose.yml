@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  glances:
+    image: nicolargo/glances:latest-full
+    container_name: glances
+    ports:
+      - 61208-61209:61208-61209
+    environment:
+      - "GLANCES_OPT=-w"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/os-release:/etc/os-release:ro
+    pid: host
+    restart: always
+
+  portainer:
+    image: portainer/portainer-ce:2.21.5
+    container_name: portainer
+    ports:
+      - 8000:8000
+      - 9443:9443
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: always
+
+  homer:
+    image: b4bz/homer
+    container_name: homer
+    volumes:
+      - ./config/homer:/www/assets
+    ports:
+      - 8080:8080
+    user: 1000:1000
+    environment:
+      - INIT_ASSETS=1
+    restart: unless-stopped
+
+  cloudflare:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare_tunnel
+    restart: always
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks:
+      - internal
+
+volumes:
+  portainer_data:
+
+networks:
+  internal:

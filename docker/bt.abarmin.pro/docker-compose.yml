@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  bt_abarmin_pro_web:
+    build:
+      dockerfile: ./Dockerfile
+    container_name: bt_abarmin_pro_web
+    ports:
+      - "1880:80"
+    restart: always
+    volumes:
+      - ./_uploads:/var/www/html/_uploads
+    networks:
+      - infra_internal
+      - bt_abarmin_pro_network
+
+  bt_abarmin_pro_db:
+    image: mariadb:10.6.20
+    container_name: bt_abarmin_pro_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=bugtracker
+      - MYSQL_USER=bt
+      - MYSQL_PASSWORD=bt
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - bt_abarmin_pro_network  
+
+networks:
+  infra_internal:
+    external: true
+  bt_abarmin_pro_network:

@@ -1,0 +1,40 @@
+---
+- name: Install Docker on Raspberry Pi
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install Docker
+      shell: curl -sSL https://get.docker.com | sh
+
+    - name: Add user to Docker group
+      user:
+        name: abarmin
+        groups: docker
+        append: yes
+
+    - name: Enable and start Docker
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Create a directory for the docker-compose
+      file:
+        path: /home/abarmin/dev/docker
+        state: directory
+        owner: abarmin
+        group: abarmin
+        mode: '0755'      
+
+    - name: Copy docker composes
+      copy:
+        src: ../docker/
+        dest: /home/abarmin/dev/docker
+        owner: abarmin
+        group: abarmin
+        mode: '0644'
