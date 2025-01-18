@@ -23,18 +23,15 @@
         enabled: yes
         state: started
 
-    - name: Create a directory for the docker-compose
+    - name: Create a directory for the repository
       file:
-        path: /home/abarmin/dev/docker
+        path: /home/abarmin/dev
         state: directory
         owner: abarmin
         group: abarmin
         mode: '0755'      
 
-    - name: Copy docker composes
-      copy:
-        src: ../docker/
-        dest: /home/abarmin/dev/docker
-        owner: abarmin
-        group: abarmin
-        mode: '0644'
+    - name: Clone the Git repository with the project
+      git:
+        repo: https://github.com/aabarmin/homelab.git
+        dest: /home/abarmin/dev
