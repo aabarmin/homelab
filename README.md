@@ -82,7 +82,7 @@ directories are created and the Pi is ready to go.
 
 [`docker-compose.yml`](./docker/infra/docker-compose.yml)
 
-* Traefik
+* [Traefik](./docker/traefik/docker-compose.yml)
 * Glances
 * Portainer
 * Homer
@@ -130,3 +130,12 @@ by following the same approach as for other services.
 
 When changes are delivered to the Raspberry Pi, start/restart the docker, 
 restart the `publish-name.sh` script. 
+
+### 📝 Show memory consumption in `docker stats`
+
+There is a topic on [stackoverflow](https://stackoverflow.com/a/77278502), but
+long story short - add to `/boot/firmware/cmdlinetxt` the following: 
+
+```
+cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
+```
