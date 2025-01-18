@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   glances:
-    image: nicolargo/glances:latest-full
+    image: nicolargo/glances:latest
     container_name: glances
     environment:
       - "GLANCES_OPT=-w"
