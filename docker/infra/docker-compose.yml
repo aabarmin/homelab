@@ -1,24 +1,6 @@
 version: "3.8"
 
 services:
-
-
-  homer:
-    image: b4bz/homer
-    container_name: homer
-    volumes:
-      - ./config/homer:/www/assets
-    user: 1000:1000
-    environment:
-      - INIT_ASSETS=1
-    restart: unless-stopped
-    networks:
-      - traefik
-    labels:
-      - "traefik.http.routers.homer.rule=Host(`raspberrypi.local`)"
-      - "traefik.http.routers.homer.entrypoints=http"
-      - "traefik.http.services.homer.loadbalancer.server.port=8080"
-
   cloudflare:
     image: cloudflare/cloudflared:latest
     container_name: cloudflare_tunnel

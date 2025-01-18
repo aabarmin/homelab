@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  homer:
+    image: b4bz/homer
+    container_name: homer
+    volumes:
+      - ./config:/www/assets
+    restart: always
+    networks:
+      - traefik
+    labels:
+      - "traefik.http.routers.homer.rule=Host(`raspberrypi.local`)"
+      - "traefik.http.routers.homer.entrypoints=http"
+      - "traefik.http.services.homer.loadbalancer.server.port=8080"   
+    deploy:
+      resources:
+        limits:
+          memory: 16M
+
+networks:
+  traefik:
+    external: true
+    name: traefik

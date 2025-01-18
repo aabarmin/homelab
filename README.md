@@ -85,7 +85,7 @@ directories are created and the Pi is ready to go.
 * [Traefik](./docker/traefik/docker-compose.yml)
 * [Glances](./docker/glances/docker-compose.yml)
 * [Portainer](./docker/portainer/docker-compose.yml)
-* Homer
+* [Homer](./docker/homer/docker-compose.yml)
 * Cloudflare Tunnel
 
 ### 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
@@ -97,7 +97,7 @@ directories are created and the Pi is ready to go.
 
 ### ⏰ CronJobs
 
-* [`publish-names.sh`](./docker/infra/publish-names.sh)
+* [`publish-names.sh`](./docker/traefik/publish-names.sh)
 
 ## 🤐 Secrets
 
