@@ -1,6 +1,25 @@
 version: "3.8"
 
 services:
+  traefik: 
+    image: traefik:v3.3
+    container_name: traefik
+    command: --api.insecure=true --providers.docker
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  traefik-avahi-helper:
+    image: hardillb/traefik-avahi-helper
+    container_name: traefik-avahi-helper
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
+    labels:
+      - "traefik.enable=false"
+
   glances:
     image: nicolargo/glances:latest-full
     container_name: glances
@@ -17,25 +36,29 @@ services:
   portainer:
     image: portainer/portainer-ce:2.21.5
     container_name: portainer
-    ports:
-      - 8000:8000
-      - 9443:9443
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     restart: always
+    labels:
+      - "traefik.http.routers.portainer.rule=Host(`portainer.raspberrypi.local`)"
+      - "traefik.http.routers.portainer.entrypoints=http"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
 
   homer:
     image: b4bz/homer
     container_name: homer
     volumes:
       - ./config/homer:/www/assets
-    ports:
-      - 8080:8080
     user: 1000:1000
     environment:
       - INIT_ASSETS=1
     restart: unless-stopped
+    labels:
+      - "traefik.enable=false"
+      - "traefik.http.routers.portainer.rule=Host(`raspberrypi.local`)"
+      - "traefik.http.routers.portainer.entrypoints=http"
+      - "traefik.http.services.portainer.loadbalancer.server.port=8080"
 
   cloudflare:
     image: cloudflare/cloudflared:latest
@@ -46,6 +69,8 @@ services:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     networks:
       - internal
+    labels:
+      - "traefik.enable=false"
 
 volumes:
   portainer_data:

@@ -82,6 +82,8 @@ directories are created and the Pi is ready to go.
 
 [`docker-compose.yml`](./docker/infra/docker-compose.yml)
 
+* Traefik
+* Traefik Avahi Helper
 * Glances
 * Portainer
 * Homer
