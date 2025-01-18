@@ -1,0 +1,9 @@
+{
+    "editor.fontSize": 14,
+    "editor.fontFamily": "FiraCode", 
+    "editor.fontLigatures": true,
+    "editor.rulers": [
+        80
+    ],
+    "files.autoSave": "afterDelay",
+}
