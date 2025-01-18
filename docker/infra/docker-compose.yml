@@ -1,16 +1,6 @@
 version: "3.8"
 
 services:
-  traefik: 
-    image: traefik:v3.3
-    container_name: traefik
-    command: --api.insecure=true --providers.docker
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
   glances:
     image: nicolargo/glances:latest-full
     container_name: glances
@@ -21,6 +11,8 @@ services:
       - /etc/os-release:/etc/os-release:ro
     pid: host
     restart: always
+    networks:
+      - traefik    
     labels:
       - "traefik.http.routers.glances.rule=Host(`glances.raspberrypi.local`)"
       - "traefik.http.routers.glances.entrypoints=http"
@@ -33,6 +25,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     restart: always
+    networks:
+      - traefik
     labels:
       - "traefik.http.routers.portainer.rule=Host(`portainer.raspberrypi.local`)"
       - "traefik.http.routers.portainer.entrypoints=http"
@@ -47,6 +41,8 @@ services:
     environment:
       - INIT_ASSETS=1
     restart: unless-stopped
+    networks:
+      - traefik
     labels:
       - "traefik.http.routers.homer.rule=Host(`raspberrypi.local`)"
       - "traefik.http.routers.homer.entrypoints=http"
@@ -69,3 +65,6 @@ volumes:
 
 networks:
   internal:
+  traefik:
+    external: true
+    name: traefik
