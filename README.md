@@ -99,3 +99,35 @@ directories are created and the Pi is ready to go.
 ### ⏰ CronJobs
 
 * [`publish-names.sh`](./docker/infra/publish-names.sh)
+
+## 🤐 Secrets
+
+To make everything working, need to add the following to `.profile` in the home 
+directory: 
+
+```shell
+export TUNNEL_TOKEN="<Cloudflare Tunnel Token>"
+```
+
+## 🙋 How to 
+
+### 🆕 Adding a new service
+
+First, come up with the domain name and next update [`publish-name.sh`](./docker/infra/publish-names.sh)
+script that publishes the domain name. 
+
+Secondly, add the following `labels` to the `docker-compose.yml`: 
+
+```yml
+  my-service:
+    labels:
+      - "traefik.http.routers.my-service.rule=Host(`my-service.raspberrypi.local`)"
+      - "traefik.http.routers.my-service.entrypoints=http"
+      - "traefik.http.services.my-service.loadbalancer.server.port=61208"    
+```
+
+Finally, update the Homer [`config.yml`](./docker/infra/config/homer/config.yml)
+by following the same approach as for other services. 
+
+When changes are delivered to the Raspberry Pi, start/restart the docker, 
+restart the `publish-name.sh` script. 

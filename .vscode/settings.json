@@ -1,7 +1,7 @@
 {
     "editor.fontSize": 14,
     "editor.fontFamily": "FiraCode", 
-    "editor.fontLigatures": true,
+    "editor.fontLigatures": false,
     "editor.rulers": [
         80
     ],
