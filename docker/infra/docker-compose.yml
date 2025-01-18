@@ -14,8 +14,6 @@ services:
   glances:
     image: nicolargo/glances:latest-full
     container_name: glances
-    ports:
-      - 61208-61209:61208-61209
     environment:
       - "GLANCES_OPT=-w"
     volumes:
@@ -23,6 +21,10 @@ services:
       - /etc/os-release:/etc/os-release:ro
     pid: host
     restart: always
+    labels:
+      - "traefik.http.routers.glances.rule=Host(`glances.raspberrypi.local`)"
+      - "traefik.http.routers.glances.entrypoints=http"
+      - "traefik.http.services.glances.loadbalancer.server.port=61208"    
 
   portainer:
     image: portainer/portainer-ce:2.21.5

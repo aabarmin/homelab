@@ -40,6 +40,12 @@ services:
         tag: "infrastructure"
         url: "http://raspberrypi.local:8080"
         target: "_blank"
+      - name: "Glances"
+        icon: "fa-solid fa-server"
+        subtitle: "Resource Monitoring"
+        tag: "infrastructure"
+        url: "http://glances.raspberrypi.local"
+        target: "_blank"
   - name: "Hosted Service"
     icon: "fas fa-server"
     items:
