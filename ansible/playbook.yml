@@ -35,3 +35,10 @@
       git:
         repo: https://github.com/aabarmin/homelab.git
         dest: /home/abarmin/dev
+
+    - name: Add a cronjob that publishes subdomains
+      ansible.builtin.cron:
+        name: "Run Avahi publish"
+        job: "/home/abarmin/dev/docker/infra/publish-names.sh"
+        special_time: reboot
+        user: "root"
