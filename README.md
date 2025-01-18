@@ -83,7 +83,6 @@ directories are created and the Pi is ready to go.
 [`docker-compose.yml`](./docker/infra/docker-compose.yml)
 
 * Traefik
-* Traefik Avahi Helper
 * Glances
 * Portainer
 * Homer
@@ -111,7 +110,7 @@ export TUNNEL_TOKEN="<Cloudflare Tunnel Token>"
 
 ## 🙋 How to 
 
-### 🆕 Adding a new service
+### 🆕 Add a new service
 
 First, come up with the domain name and next update [`publish-name.sh`](./docker/infra/publish-names.sh)
 script that publishes the domain name. 
