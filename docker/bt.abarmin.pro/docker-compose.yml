@@ -13,6 +13,10 @@ services:
     networks:
       - infra_internal
       - bt_abarmin_pro_network
+    deploy:
+      resources:
+        limits:
+          memory: 64M       
     labels:
       - "traefik.enable=false"      
 
@@ -29,6 +33,10 @@ services:
     restart: always
     networks:
       - bt_abarmin_pro_network
+    deploy:
+      resources:
+        limits:
+          memory: 128M       
     labels:
       - "traefik.enable=false"      
 
