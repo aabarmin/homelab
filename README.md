@@ -83,7 +83,7 @@ directories are created and the Pi is ready to go.
 [`docker-compose.yml`](./docker/infra/docker-compose.yml)
 
 * [Traefik](./docker/traefik/docker-compose.yml)
-* Glances
+* [Glances](./docker/glances/docker-compose.yml)
 * [Portainer](./docker/portainer/docker-compose.yml)
 * Homer
 * Cloudflare Tunnel
