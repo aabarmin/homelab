@@ -95,3 +95,7 @@ directories are created and the Pi is ready to go.
 
 * MariaDB 10.6.20
 * Apache HTTP + PHP 8.1
+
+### ⏰ CronJobs
+
+* [`publish-names.sh`](./docker/infra/publish-names.sh)

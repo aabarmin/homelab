@@ -46,10 +46,9 @@ services:
       - INIT_ASSETS=1
     restart: unless-stopped
     labels:
-      - "traefik.enable=false"
-      - "traefik.http.routers.portainer.rule=Host(`raspberrypi.local`)"
-      - "traefik.http.routers.portainer.entrypoints=http"
-      - "traefik.http.services.portainer.loadbalancer.server.port=8080"
+      - "traefik.http.routers.homer.rule=Host(`raspberrypi.local`)"
+      - "traefik.http.routers.homer.entrypoints=http"
+      - "traefik.http.services.homer.loadbalancer.server.port=8080"
 
   cloudflare:
     image: cloudflare/cloudflared:latest
