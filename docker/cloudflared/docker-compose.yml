@@ -10,11 +10,17 @@ services:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     networks:
       - internal
+    deploy:
+      resources:
+        limits:
+          memory: 64M      
     labels:
       - "traefik.enable=false"
 
 networks:
   internal:
+    name: infra_internal
+    external: true
   traefik:
     external: true
     name: traefik

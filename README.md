@@ -86,7 +86,7 @@ directories are created and the Pi is ready to go.
 * [Glances](./docker/glances/docker-compose.yml)
 * [Portainer](./docker/portainer/docker-compose.yml)
 * [Homer](./docker/homer/docker-compose.yml)
-* Cloudflare Tunnel
+* [Cloudflare Tunnel](./docker/cloudflared/docker-compose.yml)
 
 ### 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
 
