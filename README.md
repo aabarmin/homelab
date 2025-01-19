@@ -95,6 +95,13 @@ directories are created and the Pi is ready to go.
 * MariaDB 10.6.20
 * Apache HTTP + PHP 8.1
 
+### 👨‍💻 Personal website [abarmin.pro](https://abarmin.pro)
+
+[`docker-compose.yml`](./docker/abarmin.pro/docker-compose.yml)
+
+* MariaDB 10.6.20
+* Apache HTTP + PHP 8.1 + Wordpress
+
 ### ⏰ CronJobs
 
 * [`publish-names.sh`](./docker/traefik/publish-names.sh)

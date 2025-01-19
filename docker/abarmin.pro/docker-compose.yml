@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  abarmin_pro_web:
+    image: wordpress:6.7.1-php8.1-apache
+    container_name: abarmin_pro_web
+    restart: always
+    volumes:
+      - ./wp-content/uploads:/var/www/html/wp-content/uploads
+      - ./wp-content/plugins:/var/www/html/wp-content/plugins
+    networks:
+      - infra_internal
+      - abarmin_pro_network
+    environment:
+      - WORDPRESS_DB_HOST=abarmin_pro_db
+      - WORDPRESS_DB_USER=user
+      - WORDPRESS_DB_PASSWORD=password
+      - WORDPRESS_DB_NAME=wordpress
+    deploy:
+      resources:
+        limits:
+          memory: 64M       
+    labels:
+      - "traefik.enable=false"      
+
+  abarmin_pro_db:
+    image: mariadb:10.6.20
+    container_name: abarmin_pro_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - abarmin_pro_network
+    deploy:
+      resources:
+        limits:
+          memory: 128M       
+    labels:
+      - "traefik.enable=false"      
+
+  # phpmyadmin:
+  #   image: phpmyadmin
+  #   restart: always
+  #   ports:
+  #     - 8082:80
+  #   environment:
+  #     - PMA_ARBITRARY=1
+  #     - UPLOAD_LIMIT=50M
+  #   networks:
+  #     - abarmin_pro_network
+
+networks:
+  infra_internal:
+    external: true
+  abarmin_pro_network:
