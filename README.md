@@ -89,6 +89,8 @@ Ansible automatically installes the following services:
 
 * Apache HTTP Server + PHP module
 * MariaDB as a drop-in replacement for the MySQL
+* phpMyAdmin for managing MariaDB databases
+* Tomcat 10 + JDK 17 for running Java apps
 * 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
 * 👨‍💻 Personal website [abarmin.pro](https://abarmin.pro)
 
