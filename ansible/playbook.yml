@@ -28,4 +28,5 @@
     - lamp
     - phpmyadmin
     - bt-abarmin-pro
+    - cloudflared
     - names-publish
