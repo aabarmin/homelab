@@ -1,0 +1,44 @@
+- name: Install Apache2
+  apt:
+    name: apache2
+    state: present
+
+- name: Install PHP
+  apt: 
+    name: php
+
+- name: Install PHP mod for Apache 2
+  apt:
+    name: libapache2-mod-php
+
+- name: Install MySQL
+  apt:
+    name: mariadb-server
+
+- name: Install MySQL extension for PHP
+  apt: 
+    name: php-mysql
+
+- name: Install MySQL extension for Python
+  apt: 
+    name: python3-pymysql
+
+- name: Add PHP Info page
+  template: 
+    src: templates/phpinfo.php.j2
+    dest: /var/www/html/phpinfo.php
+
+- name: Removes all anonymous user accounts
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Removes the MySQL test database
+  mysql_db:
+    name: test
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"         

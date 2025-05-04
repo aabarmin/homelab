@@ -1,4 +1,4 @@
 #!/bin/sh
 
-git pull
+# git pull
 ansible-playbook -i inventory.yml playbook.yml

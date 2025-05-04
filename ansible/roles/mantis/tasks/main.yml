@@ -1,0 +1,17 @@
+- name: Create Mantis document root
+  file: 
+    path: /var/www/bt.abarmin.pro
+    state: directory
+    owner: abarmin
+    mode: '0755'
+
+- name: Register Mantis host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/002-bt.abarmin.pro.conf
+  vars:
+    directory: bt.abarmin.pro
+    http_host: bt.raspberrypi.local   
+
+- name: Enable Mantis website in Apache2
+  shell: /usr/sbin/a2ensite 002-bt.abarmin.pro

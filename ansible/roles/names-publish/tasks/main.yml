@@ -1,0 +1,14 @@
+- name: Update config for avahi daemon
+  template: 
+    src: templates/publish-names.sh.j2
+    dest: /home/abarmin/dev/publish-names.sh
+    mode: '0755'
+    owner: abarmin
+    group: abarmin
+
+- name: Add a cronjob that publishes subdomains
+  ansible.builtin.cron:
+    name: "Run Avahi publish"
+    job: "/home/abarmin/dev/publish-names.sh"
+    special_time: reboot
+    user: "root"

@@ -1,0 +1,26 @@
+- name: Create phpMyAdmin document root
+  file: 
+    path: /var/www/phpmyadmin
+    state: directory
+    owner: abarmin
+    mode: '0755'
+
+- name: Register phpMyAdmin host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/001-phpmyadmin.conf
+  vars:
+    directory: phpmyadmin
+    http_host: pma.raspberrypi.local   
+
+- name: Enable phpMyAdmin website in Apache2
+  shell: /usr/sbin/a2ensite 001-phpmyadmin
+
+- name: Copy phpMyAdmin install script
+  template: 
+    src: templates/phpmyadmin-install.sh.j2
+    dest: /tmp/phpmyadmin-install.sh
+    mode: '0755'
+
+- name: Execute phpMyAdmin install script
+  shell: /tmp/phpmyadmin-install.sh
