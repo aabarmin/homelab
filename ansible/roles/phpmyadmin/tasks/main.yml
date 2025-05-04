@@ -16,11 +16,18 @@
 - name: Enable phpMyAdmin website in Apache2
   shell: /usr/sbin/a2ensite 001-phpmyadmin
 
+- name: Check if phpMyAdmin index.php exists
+  stat:
+    path: /var/www/phpmyadmin/index.php
+  register: phpmyadmin_index  
+
 - name: Copy phpMyAdmin install script
   template: 
     src: templates/phpmyadmin-install.sh.j2
     dest: /tmp/phpmyadmin-install.sh
     mode: '0755'
+  when: phpmyadmin_index.stat.exists == False    
 
 - name: Execute phpMyAdmin install script
   shell: /tmp/phpmyadmin-install.sh
+  when: phpmyadmin_index.stat.exists == False    

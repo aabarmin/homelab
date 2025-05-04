@@ -1,21 +1,25 @@
-- name: Add cloudflare gpg key
-  shell: mkdir -p --mode=0755 /usr/share/keyrings && curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
-
-- name: Add cloudflare repo to apt repositories
-  shell: echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
-
-- name: Update the repos list
-  apt: 
-    update_cache: true
-
-- name: Install cloudflare app
-  apt:
-    name: cloudflared
-
 - name: Check if cloudflared service is active
   shell: "systemctl status cloudflared | grep 'Active: active'"
   register: cloudflared_active_check
   ignore_errors: yes    
+
+- name: Add cloudflare gpg key
+  shell: mkdir -p --mode=0755 /usr/share/keyrings && curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+  when: cloudflared_active_check.stdout == ""
+
+- name: Add cloudflare repo to apt repositories
+  shell: echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+  when: cloudflared_active_check.stdout == ""
+
+- name: Update the repos list
+  apt: 
+    update_cache: true
+  when: cloudflared_active_check.stdout == ""    
+
+- name: Install cloudflare app
+  apt:
+    name: cloudflared
+  when: cloudflared_active_check.stdout == ""    
 
 - name: Install cloudflare service
   shell: cloudflared service install {{ CLOUDFLARE_TOKEN }}
