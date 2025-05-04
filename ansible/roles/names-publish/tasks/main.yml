@@ -1,3 +1,12 @@
+- name: Check if avahi-publish running is running
+  shell: pgrep avahi-publish
+  register: avahi_publish_check
+  ignore_errors: true
+
+- name: Stop current publishing
+  shell: killall -9 avahi-publish
+  when: avahi_publish_check.rc == 0
+
 - name: Update config for avahi daemon
   template: 
     src: templates/publish-names.sh.j2
@@ -12,3 +21,6 @@
     job: "/home/abarmin/dev/publish-names.sh"
     special_time: reboot
     user: "root"
+
+- name: Run the publish job
+  shell: /home/abarmin/dev/publish-names.sh
