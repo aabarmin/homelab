@@ -5,8 +5,10 @@
     </h1>
 </div>
 
-Welcome to my homelab where I host useful services and websites. As the main 
-compute engine I use Docker which uses all the power of the Raspberry Pi 4. 
+Welcome to my homelab where I host useful services and websites. Previously I 
+used Docker to run all the software but next realised that it uses too much
+resources of the Raspberry Pi so instead of running Apache HTTP Server inside
+the container decided to install the `apache2` service. This works much better. 
 
 ## 🛠️ Installation
 
@@ -73,43 +75,27 @@ installs Docker and copies `docker-compose.yml` files:
 ansible-playbook -i ./ansible/inventory.yml ./ansible/playbook.yml
 ```
 
-As a result, the Docker should be automatically installed, all the required
-directories are created and the Pi is ready to go. 
+Or, it's better to execute [`apply.sh`](./ansible/apply.sh) as it also
+automatically checks if all the necessary environment variables are set.
+
+As a result, all the necessary services wil be automatically installed, all 
+the required directories are created and the Pi is ready to go. 
 
 ## 💼 Services
 
 ### 📦 Core Services
 
-[`docker-compose.yml`](./docker/infra/docker-compose.yml)
+Ansible automatically installes the following services: 
 
-* [Traefik](./docker/traefik/docker-compose.yml)
-* [Glances](./docker/glances/docker-compose.yml)
-* [Portainer](./docker/portainer/docker-compose.yml)
-* [Homer](./docker/homer/docker-compose.yml)
-* [Cloudflare Tunnel](./docker/cloudflared/docker-compose.yml)
-
-### 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
-
-[`docker-compose.yml`](./docker/bt.abarmin.pro/docker-compose.yml)
-
-* MariaDB 10.6.20
-* Apache HTTP + PHP 8.1
-
-### 👨‍💻 Personal website [abarmin.pro](https://abarmin.pro)
-
-[`docker-compose.yml`](./docker/abarmin.pro/docker-compose.yml)
-
-* MariaDB 10.6.20
-* Apache HTTP + PHP 8.1 + Wordpress
-
-### ⏰ CronJobs
-
-* [`publish-names.sh`](./docker/traefik/publish-names.sh)
+* Apache HTTP Server + PHP module
+* MariaDB as a drop-in replacement for the MySQL
+* 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
+* 👨‍💻 Personal website [abarmin.pro](https://abarmin.pro)
 
 ## 🤐 Secrets
 
-To make everything working, need to add the following to `.profile` in the home 
-directory: 
+To make the installation process working, it's necessary to add the Cloudflare
+tunnel secret before executing the [`apply.sh`](./ansible/apply.sh) script. 
 
 ```shell
 export TUNNEL_TOKEN="<Cloudflare Tunnel Token>"
@@ -117,32 +103,4 @@ export TUNNEL_TOKEN="<Cloudflare Tunnel Token>"
 
 ## 🙋 How to 
 
-### 🆕 Add a new service
-
-First, come up with the domain name and next update [`publish-name.sh`](./docker/infra/publish-names.sh)
-script that publishes the domain name. 
-
-Secondly, add the following `labels` to the `docker-compose.yml`: 
-
-```yml
-  my-service:
-    labels:
-      - "traefik.http.routers.my-service.rule=Host(`my-service.raspberrypi.local`)"
-      - "traefik.http.routers.my-service.entrypoints=http"
-      - "traefik.http.services.my-service.loadbalancer.server.port=61208"    
-```
-
-Finally, update the Homer [`config.yml`](./docker/infra/config/homer/config.yml)
-by following the same approach as for other services. 
-
-When changes are delivered to the Raspberry Pi, start/restart the docker, 
-restart the `publish-name.sh` script. 
-
-### 📝 Show memory consumption in `docker stats`
-
-There is a topic on [stackoverflow](https://stackoverflow.com/a/77278502), but
-long story short - add to `/boot/firmware/cmdlinetxt` the following: 
-
-```
-cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
-```
+Will write something when required...
