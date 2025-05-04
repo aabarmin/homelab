@@ -1,0 +1,36 @@
+- name: Create abarmin.pro document root
+  file: 
+    path: /var/www/abarmin.pro
+    state: directory
+    owner: abarmin
+    mode: '0755'
+
+- name: Register abarmin.pro host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/003-abarmin.pro.conf
+  vars:
+    directory: abarmin.pro
+    http_host: my.raspberrypi.local   
+
+- name: Enable abarmin.pro website in Apache2
+  shell: /usr/sbin/a2ensite 003-abarmin.pro
+
+- name: Copy abarmin.pro installation bundle
+  synchronize: 
+    src: dist/
+    dest: /var/www/abarmin.pro/
+    recursive: true
+
+# - name: Create a folder for uploads
+#   file:
+#     path: /var/www/bt.abarmin.pro/_uploads
+#     state: directory
+#     owner: abarmin
+#     mode: '0755'
+
+- name: Copy config
+  template:
+    src: templates/wp-config.php.j2
+    dest: /var/www/abarmin.pro/wp-config.php
+    owner: abarmin
