@@ -29,5 +29,6 @@
     - phpmyadmin
     - bt-abarmin-pro
     - abarmin-pro
+    - tomcat10
     - cloudflared
     - names-publish
