@@ -27,5 +27,5 @@
   roles:
     - lamp
     - phpmyadmin
-    - mantis
+    - bt-abarmin-pro
     - names-publish

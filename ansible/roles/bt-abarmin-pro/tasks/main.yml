@@ -1,0 +1,36 @@
+- name: Create Mantis document root
+  file: 
+    path: /var/www/bt.abarmin.pro
+    state: directory
+    owner: abarmin
+    mode: '0755'
+
+- name: Register Mantis host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/002-bt.abarmin.pro.conf
+  vars:
+    directory: bt.abarmin.pro
+    http_host: bt.raspberrypi.local   
+
+- name: Enable Mantis website in Apache2
+  shell: /usr/sbin/a2ensite 002-bt.abarmin.pro
+
+- name: Copy Mantis installation bundle
+  synchronize: 
+    src: dist/
+    dest: /var/www/bt.abarmin.pro/
+    recursive: true
+
+- name: Create a folder for uploads
+  file:
+    path: /var/www/bt.abarmin.pro/_uploads
+    state: directory
+    owner: abarmin
+    mode: '0755'
+
+- name: Copy config
+  template:
+    src: templates/config_inc.php.j2
+    dest: /var/www/bt.abarmin.pro/config/config_inc.php
+    owner: abarmin
