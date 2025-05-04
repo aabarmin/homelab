@@ -5,14 +5,16 @@ services:
     build:
       dockerfile: ./Dockerfile
     container_name: bt_abarmin_pro_web
-    ports:
-      - "1880:80"
     restart: always
     volumes:
       - ./_uploads:/var/www/html/_uploads
     networks:
       - infra_internal
       - bt_abarmin_pro_network
+    deploy:
+      resources:
+        limits:
+          memory: 64M       
     labels:
       - "traefik.enable=false"      
 
@@ -29,6 +31,10 @@ services:
     restart: always
     networks:
       - bt_abarmin_pro_network
+    deploy:
+      resources:
+        limits:
+          memory: 128M       
     labels:
       - "traefik.enable=false"      
 

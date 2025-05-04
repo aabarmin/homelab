@@ -82,11 +82,11 @@ directories are created and the Pi is ready to go.
 
 [`docker-compose.yml`](./docker/infra/docker-compose.yml)
 
-* Traefik
-* Glances
-* Portainer
-* Homer
-* Cloudflare Tunnel
+* [Traefik](./docker/traefik/docker-compose.yml)
+* [Glances](./docker/glances/docker-compose.yml)
+* [Portainer](./docker/portainer/docker-compose.yml)
+* [Homer](./docker/homer/docker-compose.yml)
+* [Cloudflare Tunnel](./docker/cloudflared/docker-compose.yml)
 
 ### 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
 
@@ -95,9 +95,16 @@ directories are created and the Pi is ready to go.
 * MariaDB 10.6.20
 * Apache HTTP + PHP 8.1
 
+### 👨‍💻 Personal website [abarmin.pro](https://abarmin.pro)
+
+[`docker-compose.yml`](./docker/abarmin.pro/docker-compose.yml)
+
+* MariaDB 10.6.20
+* Apache HTTP + PHP 8.1 + Wordpress
+
 ### ⏰ CronJobs
 
-* [`publish-names.sh`](./docker/infra/publish-names.sh)
+* [`publish-names.sh`](./docker/traefik/publish-names.sh)
 
 ## 🤐 Secrets
 
@@ -130,3 +137,12 @@ by following the same approach as for other services.
 
 When changes are delivered to the Raspberry Pi, start/restart the docker, 
 restart the `publish-name.sh` script. 
+
+### 📝 Show memory consumption in `docker stats`
+
+There is a topic on [stackoverflow](https://stackoverflow.com/a/77278502), but
+long story short - add to `/boot/firmware/cmdlinetxt` the following: 
+
+```
+cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
+```
