@@ -27,7 +27,7 @@
     path: /var/www/bt.abarmin.pro/_uploads
     state: directory
     owner: abarmin
-    mode: '0755'
+    mode: '0777'
 
 - name: Copy config
   template:
