@@ -1,7 +1,7 @@
 - name: Check if cloudflared service is active
   shell: "systemctl status cloudflared | grep 'Active: active'"
   register: cloudflared_active_check
-  ignore_errors: yes    
+  ignore_errors: yes
 
 - name: Add cloudflare gpg key
   shell: mkdir -p --mode=0755 /usr/share/keyrings && curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null

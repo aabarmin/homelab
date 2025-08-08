@@ -7,6 +7,14 @@
   apt: 
     name: php
 
+- name: Increase PHP memory limit
+  ini_file:
+    path: /etc/php/8.2/apache2/php.ini
+    section: PHP
+    option: memory_limit
+    value: 1024M
+  become: true
+
 - name: Install PHP mod for Apache 2
   apt:
     name: libapache2-mod-php

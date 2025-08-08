@@ -69,7 +69,7 @@ ansible all -i ./ansible/inventory.yml -m ping
 There should be no errors in the output. 
 
 The last one step is to apply the [`playbook.yml`](./ansible/playbook.yml) that
-installs Docker and copies `docker-compose.yml` files: 
+installs all the necessary software.
 
 ```shell
 ansible-playbook -i ./ansible/inventory.yml ./ansible/playbook.yml
@@ -92,7 +92,7 @@ Ansible automatically installes the following services:
 * phpMyAdmin for managing MariaDB databases
 * Tomcat 10 + JDK 17 for running Java apps
 * 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
-* 👨‍💻 Personal website [abarmin.pro](https://abarmin.pro)
+* 👨‍💻 Personal website [abarmin.pro](https://old.abarmin.pro)
 
 ## 🤐 Secrets
 
@@ -100,7 +100,7 @@ To make the installation process working, it's necessary to add the Cloudflare
 tunnel secret before executing the [`apply.sh`](./ansible/apply.sh) script. 
 
 ```shell
-export TUNNEL_TOKEN="<Cloudflare Tunnel Token>"
+export CLOUDFLARE_TOKEN="<Cloudflare Tunnel Token>"
 ```
 
 ## 🙋 How to 

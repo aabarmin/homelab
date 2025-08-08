@@ -1,0 +1,115 @@
+- name: Create nextcloud document root
+  file: 
+    path: /var/www/nextcloud
+    state: directory
+    owner: "{{ default_owner }}"
+    mode: '0755'
+
+- name: Register nextcloud host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/004-nextcloud.conf
+  vars:
+    directory: nextcloud
+    http_host: hub.raspberrypi.local   
+
+- name: Enable nextcloud website in Apache2
+  shell: /usr/sbin/a2ensite 004-nextcloud
+
+- name: Ensure unzip is installed
+  apt:
+    name: unzip
+    state: present
+  become: true
+
+- name: Check if nextcloud already downloaded
+  stat: 
+    path: /tmp/nextcloud.zip
+  register: nextcloud_downloaded  
+
+- name: Download Nextcloud archive
+  get_url:
+    url: https://download.nextcloud.com/server/releases/latest.zip
+    dest: "/tmp/nextcloud.zip"
+    mode: '0644'
+  become: true
+  when: not nextcloud_downloaded.stat.exists
+
+- name: Check if nextcloud already unarchived
+  stat: 
+    path: /tmp/nextcloud/nextcloud/index.php
+  register: nextcloud_unpacked
+
+- name: Create a directory to unarchive nextcloud
+  file: 
+    path: /tmp/nextcloud
+    state: directory
+    owner: "{{ default_owner }}"
+    mode: '0755'  
+  when: not nextcloud_unpacked.stat.exists  
+
+- name: Unarchive Nextcloud
+  unarchive:
+    src: "/tmp/nextcloud.zip"
+    dest: "/tmp/nextcloud/"
+    remote_src: yes
+  become: true
+  when: not nextcloud_unpacked.stat.exists  
+
+- name: Check if nextcloud already installed
+  stat: 
+    path: /var/www/nextcloud/index.php
+  register: nextcloud_installed
+
+- name: Copy extracted Nextcloud files to target directory
+  copy:
+    src: "/tmp/nextcloud/nextcloud/"
+    dest: "/var/www/nextcloud/"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0755'
+    remote_src: yes
+  become: true 
+  when: not nextcloud_installed.stat.exists 
+
+- name: Make config directory writable
+  file:
+    path: "/var/www/nextcloud/config/"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: "0777"
+    recurse: yes
+  become: true
+
+- name: Make apps directory writable
+  file:
+    path: "/var/www/nextcloud/apps/"
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: "0777"
+    recurse: yes
+  become: true
+
+- name: Create nextcloud data directory
+  file: 
+    path: /var/www/nextcloud/data
+    state: directory
+    owner: "{{ apache_user }}"
+    group: "{{ apache_group }}"
+    mode: '0770'
+
+- name: Create MySQL database for Nextcloud
+  community.mysql.mysql_db:
+    name: "{{ nextcloud_database_name }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Create MySQL user and grant privileges to Nextcloud
+  community.mysql.mysql_user:
+    name: "{{ nextcloud_database_user }}"
+    password: "{{ nextcloud_database_password }}"
+    priv: "{{ nextcloud_database_name }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"

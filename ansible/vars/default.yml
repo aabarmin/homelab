@@ -1,3 +1,10 @@
 ---
 mysql_root_password: "root"
 default_owner: "abarmin"
+
+nextcloud_database_name: "nextcloud"
+nextcloud_database_user: "nextcloud"
+nextcloud_database_password: "nextcloud_password"
+
+apache_user: "www-data"
+apache_group: "www-data"

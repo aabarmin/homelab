@@ -1,6 +1,9 @@
 <VirtualHost *:80>
    ServerAdmin webmaster@localhost
    ServerName {{ http_host }}
-   ServerAlias abarmin.pro
+   ServerAlias old.abarmin.pro my.raspberrypi.local
    DocumentRoot /var/www/{{ directory }}
+
+   CustomLog /var/log/apache2/abarmin_pro_access.log combined
+   ErrorLog /var/log/apache2/abarmin_pro_error.log
 </VirtualHost>

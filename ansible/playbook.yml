@@ -30,5 +30,7 @@
     - bt-abarmin-pro
     - abarmin-pro
     - tomcat10
-    - cloudflared
+    # - cloudflared
+    - nas
+    - nextcloud
     - names-publish
