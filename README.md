@@ -91,6 +91,7 @@ Ansible automatically installes the following services:
 * MariaDB as a drop-in replacement for the MySQL
 * phpMyAdmin for managing MariaDB databases
 * Tomcat 10 + JDK 17 for running Java apps
+* 📚 Nextcloud [hub.raspberrypi.local](http://hub.raspberrypi.local)
 * 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
 * 👨‍💻 Personal website [abarmin.pro](https://old.abarmin.pro)
 

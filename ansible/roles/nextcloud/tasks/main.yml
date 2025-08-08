@@ -113,3 +113,10 @@
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
+
+- name: Add hub.raspberrypi.local to hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "127.0.1.1 hub.raspberrypi.local"
+    state: present
+  become: true
