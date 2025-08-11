@@ -11,7 +11,7 @@
     dest: /etc/apache2/sites-available/001-phpmyadmin.conf
   vars:
     directory: phpmyadmin
-    http_host: pma.raspberrypi.local   
+    http_host: pma.barmin-home.local   
 
 - name: Enable phpMyAdmin website in Apache2
   shell: /usr/sbin/a2ensite 001-phpmyadmin

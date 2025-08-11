@@ -34,7 +34,7 @@ When the key is generated, it is saved to the `~/.ssh/id_rsa` and needs to be
 compied to the Raspberry Pi. Execute the following command to do so: 
 
 ```shell
-ssh-copy-id abarmin@raspberrypi.local
+ssh-copy-id abarmin@barmin-home.local
 ```
 
 You will be asked to enter the password for the user with name `abarmin`, 
@@ -44,7 +44,7 @@ Execute the following command to test, you should be logged without in the need
 to enter the password: 
 
 ```shell
-ssh abarmin@raspberrypi.local
+ssh abarmin@barmin-home.local
 ```
 
 The next step is to make Ansible aware of the host and to do so it's necessary
@@ -55,7 +55,7 @@ all the details on how to connect to the Raspberry Pi:
 all:
   hosts:
     raspberrypi:
-      ansible_host: raspberrypi.local
+      ansible_host: barmin-home.local
       ansible_user: abarmin
       ansible_ssh_private_key_file: ~/.ssh/id_rsa
 ```
@@ -91,7 +91,7 @@ Ansible automatically installes the following services:
 * MariaDB as a drop-in replacement for the MySQL
 * phpMyAdmin for managing MariaDB databases
 * Tomcat 10 + JDK 17 for running Java apps
-* 📚 Nextcloud [hub.raspberrypi.local](http://hub.raspberrypi.local)
+* 📚 Nextcloud [hub.barmin-home.local](http://hub.barmin-home.local)
 * 🐞 Mantis Bugtracker [bt.abarmin.pro](https://bt.abarmin.pro)
 * 👨‍💻 Personal website [abarmin.pro](https://old.abarmin.pro)
 

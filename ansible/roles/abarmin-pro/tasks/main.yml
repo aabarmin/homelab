@@ -11,7 +11,7 @@
     dest: /etc/apache2/sites-available/003-abarmin.pro.conf
   vars:
     directory: abarmin.pro
-    http_host: my.raspberrypi.local   
+    http_host: my.barmin-home.local   
 
 - name: Enable abarmin.pro website in Apache2
   shell: /usr/sbin/a2ensite 003-abarmin.pro

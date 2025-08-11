@@ -1,6 +1,6 @@
 all:
   hosts:
     raspberrypi:
-      ansible_host: raspberrypi.local
+      ansible_host: barmin-home.local
       ansible_user: abarmin
       ansible_ssh_private_key_file: ~/.ssh/id_rsa

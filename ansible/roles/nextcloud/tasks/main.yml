@@ -11,7 +11,7 @@
     dest: /etc/apache2/sites-available/004-nextcloud.conf
   vars:
     directory: nextcloud
-    http_host: hub.raspberrypi.local   
+    http_host: hub.barmin-home.local   
 
 - name: Enable nextcloud website in Apache2
   shell: /usr/sbin/a2ensite 004-nextcloud
@@ -114,9 +114,9 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
 
-- name: Add hub.raspberrypi.local to hosts
+- name: Add hub.barmin-home.local to hosts
   lineinfile:
     path: /etc/hosts
-    line: "127.0.1.1 hub.raspberrypi.local"
+    line: "127.0.1.1 hub.barmin-home.local"
     state: present
   become: true

@@ -11,7 +11,7 @@
     dest: /etc/apache2/sites-available/002-bt.abarmin.pro.conf
   vars:
     directory: bt.abarmin.pro
-    http_host: bt.raspberrypi.local   
+    http_host: bt.barmin-home.local   
 
 - name: Enable Mantis website in Apache2
   shell: /usr/sbin/a2ensite 002-bt.abarmin.pro
