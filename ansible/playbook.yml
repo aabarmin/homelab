@@ -29,7 +29,7 @@
     - phpmyadmin
     - bt-abarmin-pro
     - abarmin-pro
-    - tomcat10
+    # - tomcat10
     # - cloudflared
     - nas
     - nextcloud
