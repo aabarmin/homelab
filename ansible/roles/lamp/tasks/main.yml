@@ -15,6 +15,22 @@
     value: 1024M
   become: true
 
+- name: Increase PHP upload max file size
+  ini_file:
+    path: /etc/php/8.2/apache2/php.ini
+    section: PHP
+    option: upload_max_filesize
+    value: 5G
+  become: true
+
+- name: Increase PHP POST max size
+  ini_file:
+    path: /etc/php/8.2/apache2/php.ini
+    section: PHP
+    option: post_max_size
+    value: 5G
+  become: true
+
 - name: Disable output buffering
   ini_file:
     path: /etc/php/8.2/apache2/php.ini
