@@ -106,4 +106,49 @@ export CLOUDFLARE_TOKEN="<Cloudflare Tunnel Token>"
 
 ## 🙋 How to 
 
-Will write something when required...
+## Add HEIC support to NextCloud
+
+1. Make sure ImageMagick extension is installed (should be installed automatically) 
+  by Ansible but just in case you're doing the installation manually. 
+2. Add the following lines to the `config/config.php` file: 
+
+```php
+  'enabledPreviewProviders' =>
+    array (
+      0 => 'OC\\Preview\\BMP',
+      1 => 'OC\\Preview\\GIF',
+      2 => 'OC\\Preview\\JPEG',
+      3 => 'OC\\Preview\\Krita',
+      4 => 'OC\\Preview\\MarkDown',
+      5 => 'OC\\Preview\\MP3',
+      6 => 'OC\\Preview\\OpenDocument',
+      7 => 'OC\\Preview\\PNG',
+      8 => 'OC\\Preview\\TXT',
+      9 => 'OC\\Preview\\XBitmap',
+      10 => 'OC\\Preview\\HEIC',
+      11 => 'OC\\Preview\\Movie',
+    ),
+```
+
+## Register manually uploaded files to NextCloud
+
+It's much quicker to upload files by using SFTP rather than NextCloud's WebDav. 
+But the files loaded manually will not appear on NextCloud because it's necessary
+to register them first. Can be done by scanning: 
+
+```shell
+sudo -u www-data php occ files:scan --all
+```
+
+Will take some time but next these files will appear in the UI too. 
+
+## Group preview generation
+
+After uploading of multiple files it's better to generate previews for all of them. 
+To do so need to install `Preview Generator` app and execute: 
+
+```shell
+sudo -u www-data php occ preview:generate-all
+```
+
+It'll take some time but the progress will be shown in the terminal. 
