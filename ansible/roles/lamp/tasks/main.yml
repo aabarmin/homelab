@@ -55,6 +55,10 @@
   apt: 
     name: python3-pymysql
 
+- name: Install ImageMagick extension for PHP
+  apt:
+    name: php-imagick
+
 - name: Add PHP Info page
   template: 
     src: templates/phpinfo.php.j2
