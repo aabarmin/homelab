@@ -1,0 +1,49 @@
+- name: Install libvips
+  apt:
+    name: libvips
+    state: present
+
+- name: Install libvips tools
+  apt:
+    name: libvips-tools
+    state: present
+
+- name: Install libvips dev packages
+  apt:
+    name: libvips-dev
+    state: present    
+
+- name: Install imaginary with go install
+  become: false
+  shell: |
+    /usr/local/go/bin/go install github.com/h2non/imaginary@latest
+
+- name: Create imaginary service if not exists
+  copy:
+    dest: /etc/systemd/system/imaginary.service
+    content: |
+      [Unit]
+      Description=Imaginary image processing service
+      After=network.target
+
+      [Service]
+      ExecStart=/home/abarmin/go/bin/imaginary -p 28080
+      Restart=on-failure
+      User=abarmin
+      WorkingDirectory=/home/abarmin
+      Environment=PATH=/usr/local/bin:/usr/bin:/bin
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+    notify: Restart imaginary service
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start imaginary service
+  systemd:
+    name: imaginary
+    enabled: yes
+    state: started  

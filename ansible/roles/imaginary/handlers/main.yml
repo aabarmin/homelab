@@ -1,0 +1,5 @@
+- name: Restart imaginary service
+  systemd:
+    name: imaginary
+    state: restarted
+    daemon_reload: yes
