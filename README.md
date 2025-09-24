@@ -152,3 +152,25 @@ sudo -u www-data php occ preview:generate-all
 ```
 
 It'll take some time but the progress will be shown in the terminal. 
+
+## Use Imeginary to generate previews for various image types
+
+Recently added the `golang` and `imaginary` roles. The first one installs
+the `go` executable, the second one installs a high-performance image library
+[imaginary](https://github.com/h2non/imaginary). The library provides with 
+a service that listens to `28080` port and converts images. 
+
+To use it add the following line to the `nextcloud/config/config.php`:
+
+```
+'preview_imaginary_url' => 'http://localhost:28088/',
+```
+
+And enable a corresponding preview provider: 
+
+```php
+ 'enabledPreviewProviders' => array(
+  ..
+  12 => 'OC\\Preview\\Imaginary'
+ )
+```
