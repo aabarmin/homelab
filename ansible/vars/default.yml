@@ -8,3 +8,5 @@ nextcloud_database_password: "nextcloud_password"
 
 apache_user: "www-data"
 apache_group: "www-data"
+
+nfs_allowed_network: "192.168.88.0/24"

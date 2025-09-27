@@ -30,6 +30,7 @@
     - bt-abarmin-pro
     - abarmin-pro
     - nas
+    - nfs
     - golang
     - imaginary
     - nextcloud

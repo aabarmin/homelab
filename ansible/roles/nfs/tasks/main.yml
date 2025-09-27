@@ -1,0 +1,35 @@
+- name: Install NFS server packages
+  apt:
+    name: nfs-kernel-server
+    state: present
+  become: true
+
+- name: Get UID of server user
+  command: id -u {{ default_owner }}
+  register: server_uid
+  changed_when: false
+
+- name: Get GID of server group
+  command: id -g {{ default_owner }}
+  register: server_gid
+  changed_when: false  
+
+- name: Configure NFS exports
+  template:
+    src: templates/exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: Ensure NFS server is enabled and running
+  systemd:
+    name: nfs-kernel-server
+    enabled: yes
+    state: started
+  become: true  
+
+- name: Reload NFS exports
+  command: exportfs -ra
+  
