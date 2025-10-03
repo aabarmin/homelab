@@ -8,4 +8,4 @@
 # fi
 
 # ansible-playbook -i inventory.yml playbook.yml -e "CLOUDFLARE_TOKEN=${CLOUDFLARE_TOKEN}"
-ansible-playbook -i inventory.yml playbook.yml
+ansible-playbook -i inventory.yml playbook.yml -K
