@@ -50,6 +50,20 @@ to enter the password:
 ssh abarmin@barmin-home.local
 ```
 
+To perform many operations it's necessary to have `root` privileges. The first
+option is to use `--ask-become-pass` (`-K`) to provide the password. Another
+option is to add `abarmin` user to the sudoers. 
+
+```shell
+visudo
+```
+
+Add the following to the file: 
+
+```
+abarmin ALL=(ALL) NOPASSWD:ALL
+```
+
 The next step is to make Ansible aware of the host and to do so it's necessary
 to create an [`inventory.yml`](./ansible/inventory.yml) file which contains
 all the details on how to connect to the Raspberry Pi: 
