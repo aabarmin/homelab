@@ -47,6 +47,21 @@
   apt:
     name: mariadb-server
 
+- name: Make sure MySQL is up and running
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Set MySQL root password
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    user: root
+    host_all: yes
+    password: "{{ mysql_root_password }}"
+    priv: "*.*:ALL,GRANT"
+    state: present 
+
 - name: Install MySQL extension for PHP
   apt: 
     name: php-mysql
