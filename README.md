@@ -31,7 +31,7 @@ ssh-keygen -t rsa -b 4096 -C "Raspberry Pi"
 ```
 
 When the key is generated, it is saved to the `~/.ssh/id_rsa` and needs to be
-compied to the Raspberry Pi. Execute the following command to do so: 
+copied to the Raspberry Pi. Execute the following command to do so: 
 
 ```shell
 ssh-copy-id abarmin@barmin-home.local
