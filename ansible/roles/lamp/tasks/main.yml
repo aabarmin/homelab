@@ -53,14 +53,15 @@
     state: started
     enabled: yes
 
-- name: Set MySQL root password
-  mysql_user:
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    user: root
-    host_all: yes
-    password: "{{ mysql_root_password }}"
-    priv: "*.*:ALL,GRANT"
-    state: present 
+# Uncomment when running for the first time
+# - name: Set MySQL root password
+#   mysql_user:
+#     login_unix_socket: /var/run/mysqld/mysqld.sock
+#     user: root
+#     host_all: yes
+#     password: "{{ mysql_root_password }}"
+#     priv: "*.*:ALL,GRANT"
+#     state: present 
 
 - name: Install MySQL extension for PHP
   apt: 
