@@ -23,6 +23,9 @@ way to do so:
 brew install ansible
 ```
 
+> **Important!** If you need to login to multiple remote computer no need 
+to generate keys for each of them, the same key can be used. 
+
 The next step is to generate the SSH key that will be used to access
 the Raspberry Pi without need to enter the password: 
 
