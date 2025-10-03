@@ -180,3 +180,15 @@ And enable a corresponding preview provider:
   12 => 'OC\\Preview\\Imaginary'
  )
 ```
+
+## Change `tmux` color theme
+
+`tmux` is one of my favourite tools and it's important to have different
+color scheme on different environments - otherwise it's too easy to make
+wrong action on the wrong environment. 
+
+First of all, it's [awesome tmux](https://github.com/rothgar/awesome-tmux)
+which has a lot of useful tools that will make life much better. 
+
+Secondly, configuration for tmux actually lives in `~/.config/tmux/tmux.conf`
+but not in `~/.tmux.conf` as it's mentioned everywhere on the web. 
