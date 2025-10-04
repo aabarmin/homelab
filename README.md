@@ -192,3 +192,66 @@ which has a lot of useful tools that will make life much better.
 
 Secondly, configuration for tmux actually lives in `~/.config/tmux/tmux.conf`
 but not in `~/.tmux.conf` as it's mentioned everywhere on the web. 
+
+## Create `zfs` RAID1
+
+Surprisingly, it's not that hard as it sounded. First, need to install `zfs`
+kernel module (`nas` roles does it automatically but just in case):
+
+```shell
+sudo apt update
+sudo apt install zfsutils-linux
+```
+
+Next, check that `zfs` module is up and running: 
+
+```shell
+lsmod | grep zfs
+```
+
+If not visible, load it: 
+
+```shell
+sudo modprobe zfs
+```
+
+> My drives were used as `mdadm` RAIS so need to exclude it from RAID first
+  and wipe out the file system: 
+
+  ```shell
+  # Get name of the raid
+  lsblk
+
+  # Stop the mdadm raid
+  sudo mdadm --stop /dev/md127
+
+  # Zero superblock
+  sudo mdadm --zero-superblock /dev/sdx
+
+  # Remove the file system
+  sudo wipefs -a /dev/sdx
+  ```
+
+Finally, when disks are prepared, create a ZFS pool: 
+
+```shell
+sudo zpool create tank mirror /dev/sdb /dev/sdc
+```
+
+And a file system on top of it: 
+
+```shell
+sudo zfs create /tank/nas
+```
+
+Good idea is to enable the compression: 
+
+```shell
+sudo zfs set compression=lz4 tank
+```
+
+Don't forget to change owner of the mount point: 
+
+```shell
+sudo chown abarmin:abarmin /tank/nas
+```
