@@ -5,19 +5,12 @@
 
 - name: Download Golang 1.25.1
   get_url:
-    url: https://go.dev/dl/go1.25.1.linux-arm64.tar.gz
-    dest: /tmp/go1.25.1.linux-arm64.tar.gz
+    url: https://go.dev/dl/go1.25.1.linux-amd64.tar.gz
+    dest: /tmp/go1.25.1.linux-amd64.tar.gz
     mode: '0644'
 
 - name: Extract Golang
   unarchive:
-    src: /tmp/go1.25.1.linux-arm64.tar.gz
+    src: /tmp/go1.25.1.linux-amd64.tar.gz
     dest: /usr/local
     remote_src: yes
-
-- name: Add Go to PATH
-  ansible.builtin.lineinfile:
-    path: /etc/profile.d/go.sh
-    create: yes
-    mode: '0755'
-    line: 'export PATH=$PATH:/usr/local/go/bin'
