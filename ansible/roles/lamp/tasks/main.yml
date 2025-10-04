@@ -43,6 +43,26 @@
   apt:
     name: libapache2-mod-php
 
+- name: Install mbstring extension for PHP
+  apt:
+    name: php8.3-mbstring
+
+- name: Install XML extension for PHP
+  apt:
+    name: php8.3-xml
+
+- name: Install ZIP extension for PHP
+  apt:
+    name: php8.3-zip
+
+- name: Install GD extension for PHP
+  apt:
+    name: php8.3-gd
+
+- name: Install cURL extension for PHP
+  apt:
+    name: php8.3-curl    
+
 - name: Install MySQL
   apt:
     name: mariadb-server
