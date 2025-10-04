@@ -1,5 +1,5 @@
 ---
-- name: Prepare Raspberry Pi to work like a LAMP server
+- name: Prepare Intel NUC to work as a home server
   hosts: all
   become: yes
   vars_files:
