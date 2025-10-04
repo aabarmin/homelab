@@ -1,4 +1,4 @@
-- name: Install mdadm
+- name: Install zfs
   apt:
-    name: mdadm
+    name: zfsutils-linux
     state: present
