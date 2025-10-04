@@ -255,3 +255,13 @@ Don't forget to change owner of the mount point:
 ```shell
 sudo chown abarmin:abarmin /tank/nas
 ```
+
+## Import a big MySQL dump
+
+Surprisingly, it's simple: 
+
+```shell
+mysql -u username -p database_name < dump.sql
+```
+
+`root` user should work too :)
