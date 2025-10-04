@@ -36,7 +36,6 @@
       [Install]
       WantedBy=multi-user.target
     mode: '0644'
-    notify: Restart imaginary service
 
 - name: Reload systemd daemon
   systemd:
