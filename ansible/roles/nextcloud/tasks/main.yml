@@ -1,3 +1,7 @@
+- name: Install ffmpeg
+  apt:
+    name: ffmpeg
+
 - name: Create nextcloud document root
   file: 
     path: /var/www/nextcloud
