@@ -1,0 +1,4 @@
+- name: Install podman
+  apt:
+    name: podman
+    state: present
