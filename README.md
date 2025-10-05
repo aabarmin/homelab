@@ -136,6 +136,15 @@ export CLOUDFLARE_TOKEN="<Cloudflare Tunnel Token>"
     ),
 ```
 
+If previews for HEIC files aren't generated, execute the following: 
+
+```shell
+sudo add-apt-repository ppa:ubuntuhandbook1/libheif
+sudo apt update
+sudo apt upgrate
+sudo apt install libheic
+```
+
 ## Register manually uploaded files to NextCloud
 
 It's much quicker to upload files by using SFTP rather than NextCloud's WebDav. 
