@@ -7,12 +7,27 @@
   apt: 
     name: php
 
+- name: Install PHP extensions
+  apt:
+    name: 
+      - libapache2-mod-php
+      - php8.3-mbstring
+      - php8.3-xml
+      - php8.3-zip
+      - php8.3-gd
+      - php8.3-curl
+      - php8.3-gmp
+      - php8.3-apcu
+      - php8.3-intl
+      - php8.3-imagick
+      - php8.3-exif    
+
 - name: Increase PHP memory limit
   ini_file:
     path: /etc/php/8.3/apache2/php.ini
     section: PHP
     option: memory_limit
-    value: 1024M
+    value: 2048M
   become: true
 
 - name: Increase PHP upload max file size
@@ -39,29 +54,53 @@
     value: Off
   become: true
 
-- name: Install PHP mod for Apache 2
-  apt:
-    name: libapache2-mod-php
+- name: Enable opcache
+  ini_file:
+    path: /etc/php/8.3/apache2/php.ini
+    section: opcache
+    option: opcache.enable
+    value: 1
+  become: true
 
-- name: Install mbstring extension for PHP
-  apt:
-    name: php8.3-mbstring
+- name: Increase opcache memory consumption
+  ini_file:
+    path: /etc/php/8.3/apache2/php.ini
+    section: opcache
+    option: opcache.memory_consumption
+    value: 512
+  become: true  
 
-- name: Install XML extension for PHP
-  apt:
-    name: php8.3-xml
+- name: Increase opcache string buffer
+  ini_file:
+    path: /etc/php/8.3/apache2/php.ini
+    section: opcache
+    option: opcache.interned_strings_buffer
+    value: 64
+  become: true
 
-- name: Install ZIP extension for PHP
-  apt:
-    name: php8.3-zip
+- name: Increase opcache max accelerated files
+  ini_file:
+    path: /etc/php/8.3/apache2/php.ini
+    section: opcache
+    option: opcache.max_accelerated_files
+    value: 50000
+  become: true
 
-- name: Install GD extension for PHP
-  apt:
-    name: php8.3-gd
+- name: Increase opcache max wasted percentage
+  ini_file:
+    path: /etc/php/8.3/apache2/php.ini
+    section: opcache
+    option: opcache.max_wasted_percentage
+    value: 15
+  become: true
 
-- name: Install cURL extension for PHP
-  apt:
-    name: php8.3-curl    
+- name: Increase APC shm size
+  ini_file:
+    path: /etc/php/8.3/apache2/php.ini
+    section: apc
+    option: apc.shm_size
+    value: 512M
+  become: true  
 
 - name: Install MySQL
   apt:
@@ -90,10 +129,6 @@
 - name: Install MySQL extension for Python
   apt: 
     name: python3-pymysql
-
-- name: Install ImageMagick extension for PHP
-  apt:
-    name: php-imagick
 
 - name: Add PHP Info page
   template: 
