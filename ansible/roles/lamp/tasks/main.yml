@@ -21,6 +21,7 @@
       - php8.3-intl
       - php8.3-imagick
       - php8.3-exif    
+      - php8.3-redis
 
 - name: Increase PHP memory limit
   ini_file:
@@ -106,6 +107,22 @@
   apt:
     name: mariadb-server
 
+- name: Set transaction isolation level
+  ini_file:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    section: mysqld
+    option: transaction_isolation
+    value: READ-COMMITTED
+  become: true
+
+- name: Set binlog format
+  ini_file:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    section: mysqld
+    option: binlog_format
+    value: ROW
+  become: true   
+
 - name: Make sure MySQL is up and running
   service:
     name: mariadb
@@ -148,4 +165,22 @@
     name: test
     state: absent
     login_user: root
-    login_password: "{{ mysql_root_password }}"         
+    login_password: "{{ mysql_root_password }}"
+
+- name: Install Redis
+  apt: 
+    name: redis
+
+- name: Copy Redis configuration
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis/redis.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Add redis user to www-group
+  user:
+    name: redis
+    groups: www-data
+    append: true
