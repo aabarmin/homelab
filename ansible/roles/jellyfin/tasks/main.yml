@@ -22,4 +22,22 @@
   ansible.builtin.systemd:
     name: jellyfin
     enabled: yes
-    state: started    
+    state: started
+
+- name: Enable apache modules required to proxy requests to jellyfin
+  ansible.builtin.command: a2enmod {{ item }}
+  loop:
+    - proxy
+    - proxy_http
+    - proxy_wstunnel
+    - rewrite
+  args:
+    creates: "/etc/apache2/mods-enabled/{{ item }}.load"
+
+- name: Register jellyfin host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/005-jellyfin.conf
+
+- name: Enable nextcloud website in Apache2
+  shell: /usr/sbin/a2ensite 005-jellyfin    
