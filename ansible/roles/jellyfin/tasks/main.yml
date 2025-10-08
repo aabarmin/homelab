@@ -41,3 +41,53 @@
 
 - name: Enable nextcloud website in Apache2
   shell: /usr/sbin/a2ensite 005-jellyfin    
+
+- name: Make sure movies mount folder exists
+  file:
+    path: "{{ jellyfin_target_movies }}"
+    state: directory
+    owner: "{{ jellyfin_user }}"
+    group: "{{ jellyfin_group }}"
+    mode: '0755'
+
+- name: Make sure series mount folder exists
+  file:
+    path: "{{ jellyfin_target_series }}"
+    state: directory
+    owner: "{{ jellyfin_user }}"
+    group: "{{ jellyfin_group }}"
+    mode: '0755'
+
+- name: Mount movies
+  command: "mount --bind {{ jellyfin_source_movies }} {{ jellyfin_target_movies }}"
+  args:
+    creates: "{{ jellyfin_target_movies }}/.ansible_bind_test"
+  register: jellyfin_movies_mount
+  changed_when: jellyfin_movies_mount.rc == 0
+
+- name: Mount series
+  command: "mount --bind {{ jellyfin_source_series }} {{ jellyfin_target_series }}"
+  args:
+    creates: "{{ jellyfin_target_series }}/.ansible_bind_test"
+  register: jellyfin_series_mount
+  changed_when: jellyfin_series_mount.rc == 0
+
+- name: Remount so jellyfin can have access to movies
+  command: "mount -o remount,bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} {{ jellyfin_target_movies }}"
+  when: jellyfin_movies_mount.rc == 0
+
+- name: Remount so jellyfin can have access to series
+  command: "mount -o remount,bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} {{ jellyfin_target_series }}"
+  when: jellyfin_series_mount.rc == 0
+
+- name: Add movies mount to the fstab
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ jellyfin_source_movies }} {{ jellyfin_target_movies }} none bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} 0 0"
+    state: present 
+
+- name: Add series mount to the fstab
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ jellyfin_source_series }} {{ jellyfin_target_series }} none bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} 0 0"
+    state: present 

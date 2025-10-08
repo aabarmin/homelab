@@ -10,3 +10,10 @@ apache_user: "www-data"
 apache_group: "www-data"
 
 nfs_allowed_network: "192.168.88.0/24"
+
+jellyfin_source_movies: "/tank/nas/nextcloud/data/admin/files/Videos/Movies"
+jellyfin_source_series: "/tank/nas/nextcloud/data/admin/files/Videos/TV-Series"
+jellyfin_target_movies: "/mnt/jellyfin/movies"
+jellyfin_target_series: "/mnt/jellyfin/series"
+jellyfin_user: "jellyfin"
+jellyfin_group: "jellyfin"
