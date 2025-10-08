@@ -58,6 +58,12 @@ services:
         tag: "storage"
         url: "http://hub.barmin-home.local"
         target: "_blank"
+      - name: "Media Server"
+        subtitle: "Jellyfin"
+        icon: "fa-solid fa-photo-film"
+        tag: "media"
+        url: "http://media.barmin-home.local"
+        target: "_blank"
   - name: "Services"
     icon: "fas fa-solid fa-gear"
     items: 
