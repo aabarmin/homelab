@@ -58,6 +58,22 @@
     group: "{{ jellyfin_group }}"
     mode: '0755'
 
+- name: Make sure anime mount folder exists
+  file:
+    path: "{{ jellyfin_target_anime }}"
+    state: directory
+    owner: "{{ jellyfin_user }}"
+    group: "{{ jellyfin_group }}"
+    mode: '0755'   
+
+- name: Make sure cartoons mount folder exists
+  file:
+    path: "{{ jellyfin_target_cartoons }}"
+    state: directory
+    owner: "{{ jellyfin_user }}"
+    group: "{{ jellyfin_group }}"
+    mode: '0755'      
+
 - name: Mount movies
   command: "mount --bind {{ jellyfin_source_movies }} {{ jellyfin_target_movies }}"
   args:
@@ -72,6 +88,20 @@
   register: jellyfin_series_mount
   changed_when: jellyfin_series_mount.rc == 0
 
+- name: Mount anime
+  command: "mount --bind {{ jellyfin_source_anime }} {{ jellyfin_target_anime }}"
+  args:
+    creates: "{{ jellyfin_target_anime }}/.ansible_bind_test"
+  register: jellyfin_anime_mount
+  changed_when: jellyfin_anime_mount.rc == 0
+
+- name: Mount cartoons
+  command: "mount --bind {{ jellyfin_source_cartoons }} {{ jellyfin_target_cartoons }}"
+  args:
+    creates: "{{ jellyfin_target_cartoons }}/.ansible_bind_test"
+  register: jellyfin_cartoons_mount
+  changed_when: jellyfin_cartoons_mount.rc == 0
+
 - name: Remount so jellyfin can have access to movies
   command: "mount -o remount,bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} {{ jellyfin_target_movies }}"
   when: jellyfin_movies_mount.rc == 0
@@ -79,6 +109,14 @@
 - name: Remount so jellyfin can have access to series
   command: "mount -o remount,bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} {{ jellyfin_target_series }}"
   when: jellyfin_series_mount.rc == 0
+
+- name: Remount so jellyfin can have access to anime
+  command: "mount -o remount,bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} {{ jellyfin_target_anime }}"
+  when: jellyfin_anime_mount.rc == 0
+
+- name: Remount so jellyfin can have access to cartoons
+  command: "mount -o remount,bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} {{ jellyfin_target_cartoons }}"
+  when: jellyfin_cartoons_mount.rc == 0  
 
 - name: Add movies mount to the fstab
   lineinfile:
@@ -90,4 +128,16 @@
   lineinfile:
     path: /etc/fstab
     line: "{{ jellyfin_source_series }} {{ jellyfin_target_series }} none bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} 0 0"
-    state: present 
+    state: present
+
+- name: Add anime mount to the fstab
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ jellyfin_source_anime }} {{ jellyfin_target_anime }} none bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} 0 0"
+    state: present
+
+- name: Add cartoons mount to the fstab
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ jellyfin_source_cartoons }} {{ jellyfin_target_cartoons }} none bind,ro,uid={{ jellyfin_user }},gid={{ jellyfin_group }} 0 0"
+    state: present    
