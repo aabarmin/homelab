@@ -1,0 +1,13 @@
+[Unit]
+Description=Grafana Server
+After=network.target
+
+[Service]
+Type=simple
+User={{ grafana_user }}
+Group={{ grafana_group }}
+ExecStart=/usr/share/grafana/bin/grafana server --config=/usr/share/grafana/conf/defaults.ini --homepath=/usr/share/grafana
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

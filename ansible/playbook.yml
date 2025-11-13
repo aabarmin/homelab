@@ -37,3 +37,4 @@
     - names-publish
     - podman
     - jellyfin
+    - prometheus

@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+    ServerName grafana.barmin-home.local
+
+    ProxyPreserveHost On
+    ProxyRequests Off
+
+    ProxyPass / http://127.0.0.1:3000/
+    ProxyPassReverse / http://127.0.0.1:3000/
+
+    CustomLog /var/log/apache2/grafana_access.log combined
+    ErrorLog /var/log/apache2/grafana_error.log
+</VirtualHost>

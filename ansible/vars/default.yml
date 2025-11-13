@@ -21,3 +21,15 @@ jellyfin_target_anime: "/mnt/jellyfin/anime"
 jellyfin_target_cartoons: "/mnt/jellyfin/cartoons"
 jellyfin_user: "jellyfin"
 jellyfin_group: "jellyfin"
+
+prometheus_version: "3.7.3"
+prometheus_user: prometheus
+prometheus_group: prometheus
+prometheus_install_dir: /usr/local/bin
+prometheus_data_dir: /var/lib/prometheus
+prometheus_config_dir: /etc/prometheus
+prometheus_port: 9090
+
+grafana_user: grafana
+grafana_group: grafana
+grafana_port: 3000

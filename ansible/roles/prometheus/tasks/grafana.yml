@@ -1,0 +1,69 @@
+- name: Ensure Grafana user and group exist
+  ansible.builtin.group:
+    name: "{{ grafana_group }}"
+    state: present
+
+- name: Create Grafana user
+  ansible.builtin.user:
+    name: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    shell: /usr/sbin/nologin
+    system: yes
+    create_home: no
+
+- name: Add Grafana APT key
+  ansible.builtin.apt_key:
+    url: https://packages.grafana.com/gpg.key
+    state: present
+
+- name: Add Grafana repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://packages.grafana.com/oss/deb stable main"
+    state: present
+
+- name: Install Grafana
+  ansible.builtin.apt:
+    name: grafana
+    state: present
+    update_cache: yes
+
+- name: Ensure Grafana provisioning directory exists
+  ansible.builtin.file:
+    path: /etc/grafana/provisioning/datasources
+    state: directory
+    mode: '0755'
+
+# - name: Create default configuration
+#   ansible.builtin.template:
+#     src: grafana.ini.j2
+#     dest: /usr/share/grafana/conf/grafana.ini
+#     mode: '0644'    
+
+- name: Create data directory
+  ansible.builtin.file:
+    path: /usr/share/grafana/data
+    state: directory
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: '0755'
+
+- name: Install systemd service
+  ansible.builtin.template:
+    src: grafana.service.j2
+    dest: /etc/systemd/system/grafana.service
+    mode: '0644'
+
+- name: Reload systemd and enable Grafana
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: grafana
+    enabled: yes
+    state: started
+
+- name: Register grafana host in Apache2
+  template: 
+    src: templates/grafana_apache2.conf.j2
+    dest: /etc/apache2/sites-available/006-grafana.conf
+
+- name: Enable grafana website in Apache2
+  shell: /usr/sbin/a2ensite 006-grafana
