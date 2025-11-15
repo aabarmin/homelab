@@ -10,6 +10,7 @@ Type=simple
 ExecStart={{ prometheus_install_dir }}/prometheus \
   --config.file={{ prometheus_config_dir }}/prometheus.yml \
   --storage.tsdb.path={{ prometheus_data_dir }} \
+  --storage.tsdb.retention.time=30d \
   --web.listen-address=0.0.0.0:{{ prometheus_port }} \
   --web.console.templates=/usr/share/prometheus/consoles \
   --web.console.libraries=/usr/share/prometheus/console_libraries

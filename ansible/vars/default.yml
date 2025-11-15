@@ -33,3 +33,6 @@ prometheus_port: 9090
 grafana_user: grafana
 grafana_group: grafana
 grafana_port: 3000
+
+node_exporter_version: "1.10.2"
+node_exporter_port: 9100
