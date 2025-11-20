@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "Updating permissions for nextcloud files"
+chown -R www-data:www-data /tank/nas/nextcloud/data/admin
+chown -R www-data:www-data /tank/nas/nextcloud/data/thelesenok
+echo "Done"
+
+echo "Running the index of nextcloud"
+sudo -u www-data php /var/www/nextcloud/occ files:scan --all
+echo "Done"
+
+echo "Updating the backup"
+sudo rsync -rthv --size-only --info=progress2 --delete /tank/nas/nextcloud/data/admin /mnt/backup/nextcloud/data
+sudo rsync -rthv --size-only --info=progress2 --delete /tank/nas/nextcloud/data/thelesenok /mnt/backup/nextcloud/data
+echo "Done"
