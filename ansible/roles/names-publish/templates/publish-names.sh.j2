@@ -1,9 +1,12 @@
 #!/bin/bash
 
-/usr/bin/avahi-publish -a -R pma.barmin-home.local 192.168.88.70 &
-/usr/bin/avahi-publish -a -R bt.barmin-home.local 192.168.88.70 &
-/usr/bin/avahi-publish -a -R my.barmin-home.local 192.168.88.70 &
-/usr/bin/avahi-publish -a -R hub.barmin-home.local 192.168.88.70 &
-/usr/bin/avahi-publish -a -R media.barmin-home.local 192.168.88.70 &
-/usr/bin/avahi-publish -a -R grafana.barmin-home.local 192.168.88.70 &
-/usr/bin/avahi-publish -a -R prometheus.barmin-home.local 192.168.88.70 &
+IP=$(hostname -I | awk '{print $1}')
+
+/usr/bin/avahi-publish -a -R pma.barmin-home.local "${IP}" &
+/usr/bin/avahi-publish -a -R bt.barmin-home.local "${IP}" &
+/usr/bin/avahi-publish -a -R my.barmin-home.local "${IP}" &
+/usr/bin/avahi-publish -a -R hub.barmin-home.local "${IP}" &
+/usr/bin/avahi-publish -a -R media.barmin-home.local "${IP}" &
+/usr/bin/avahi-publish -a -R grafana.barmin-home.local "${IP}" &
+/usr/bin/avahi-publish -a -R prometheus.barmin-home.local "${IP}" &
+/usr/bin/avahi-publish -a -R git.barmin-home.local "${IP}" &

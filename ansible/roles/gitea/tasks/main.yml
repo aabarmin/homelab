@@ -1,0 +1,84 @@
+- name: Create Gitea data volume
+  containers.podman.podman_volume:
+    name: gitea_data
+    state: present
+
+- name: Create Gitea config volume
+  containers.podman.podman_volume:
+    name: gitea_config
+    state: present
+
+- name: Create Gitea Actions Runner data volume
+  containers.podman.podman_volume:
+    name: gitea_actions_data
+    state: present
+
+- name: Create Gitea network
+  containers.podman.podman_network:
+    name: gitea_net
+    state: present
+
+- name: Create MySQL database for Gitea
+  community.mysql.mysql_db:
+    name: "{{ gitea_database_name }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Create MySQL user and grant privileges to Gitea
+  community.mysql.mysql_user:
+    name: "{{ gitea_database_user }}"
+    password: "{{ gitea_database_password }}"
+    priv: "{{ gitea_database_name }}.*:ALL"
+    state: present
+    host: '%'
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Ensure Gitea container is running
+  containers.podman.podman_container:
+    name: gitea
+    image: docker.gitea.com/gitea:1.25.5-rootless
+    state: started
+    restart_policy: always
+    network: gitea_net
+    env:
+      GITEA__database__DB_TYPE: mysql
+      GITEA__database__HOST: "host.containers.internal:3306"
+      GITEA__database__NAME: "{{ gitea_database_name }}"
+      GITEA__database__USER: "{{ gitea_database_user }}"
+      GITEA__database__PASSWD: "{{ gitea_database_password }}"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "{{ gitea_runner_registration_token }}"
+    ports:
+      - "3222:3000"
+      - "2222:2222"
+    volumes:
+      - gitea_data:/var/lib/gitea
+      - gitea_config:/etc/gitea
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+- name: Create Gitea Actions Runner
+  containers.podman.podman_container:
+    name: gitea_runner
+    image: docker.gitea.com/act_runner:nightly
+    state: started
+    restart_policy: always
+    network: gitea_net
+    volumes:
+      - gitea_actions_data:/data
+      - /run/podman/podman.sock:/var/run/user/1000/docker.sock
+    env:
+      DOCKER_HOST: unix:///var/run/user/1000/docker.sock
+      GITEA_INSTANCE_URL: http://gitea:3000/
+      DOCKERD_ROOTLESS_ROOTLESSKIT_NET: slirp4netns
+      DOCKERD_ROOTLESS_ROOTLESSKIT_MTU: 65520
+      GITEA_RUNNER_REGISTRATION_TOKEN: "{{ gitea_runner_registration_token }}"
+
+- name: Register Gitea host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/008-gitea.conf
+
+- name: Enable gitea website in Apache2
+  shell: /usr/sbin/a2ensite 008-gitea

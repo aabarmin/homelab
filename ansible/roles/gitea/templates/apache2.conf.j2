@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+    ServerName git.barmin-home.local
+
+    ProxyPreserveHost On
+    ProxyRequests Off
+
+    ProxyPass / http://127.0.0.1:3222/
+    ProxyPassReverse / http://127.0.0.1:3222/
+
+    CustomLog /var/log/apache2/git_access.log combined
+    ErrorLog /var/log/apache2/git_error.log
+</VirtualHost>

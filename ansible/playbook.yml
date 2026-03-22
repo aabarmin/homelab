@@ -39,3 +39,4 @@
     - podman
     - jellyfin
     - prometheus
+    - gitea
