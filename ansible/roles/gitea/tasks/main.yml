@@ -58,6 +58,14 @@
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
+- name: Copy Gitea Actions Runner Config
+  template: 
+    src: templates/runner-config.yml.j2
+    dest: /home/abarmin/dev/runner-config.yml
+    mode: '0755'
+    owner: abarmin
+    group: abarmin
+
 - name: Create Gitea Actions Runner
   containers.podman.podman_container:
     name: gitea_runner
@@ -68,7 +76,9 @@
     volumes:
       - gitea_actions_data:/data
       - /run/podman/podman.sock:/var/run/user/1000/docker.sock
+      - /home/abarmin/dev/runner-config.yml:/config.yml
     env:
+      CONFIG_FILE: /config.yml
       DOCKER_HOST: unix:///var/run/user/1000/docker.sock
       GITEA_INSTANCE_URL: http://gitea:3000/
       DOCKERD_ROOTLESS_ROOTLESSKIT_NET: slirp4netns
