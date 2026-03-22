@@ -91,3 +91,8 @@ services:
         icon: "fa-solid fa-fire-flame-curved"
         url: "http://prometheus.barmin-home.local/"
         target: "_blank"    
+      - name: "Gitea"
+        subtitle: "Self-hosted GitHub"
+        tag: "tools"
+        icon: "fa-brands fa-git-alt"
+        url: "http://git.barmin-home.local/"
