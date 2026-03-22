@@ -2,3 +2,12 @@
   apt:
     name: podman
     state: present
+
+- name: Create directory to store podman volumes
+  file:
+    path: "/tank/nas/podman/"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
+  become: true

@@ -3,3 +3,8 @@ gitea_database_user: "gitea"
 gitea_database_password: "gitea_password"
 
 gitea_runner_registration_token: "QhlIPtQBVHpYgkkQBCnRP9dK3OEVL2WBCbEXabcdef"
+
+gitea_volume_data: /tank/nas/podman/gitea_data/
+gitea_volume_config: /tank/nas/podman/gitea_config/
+gitea_runner_volume_config: /tank/nas/podman/gitea_runner_config/
+gitea_runner_volume_data: /tank/nas/podman/gitea_runner_data/
