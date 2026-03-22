@@ -96,3 +96,4 @@ services:
         tag: "tools"
         icon: "fa-brands fa-git-alt"
         url: "http://git.barmin-home.local/"
+        target: "_blank"
