@@ -61,6 +61,7 @@
     name: gitea
     image: docker.gitea.com/gitea:1.25.5-rootless
     state: started
+    hostname: git.barmin-home.local
     restart_policy: always
     network: gitea_net
     env:
@@ -90,7 +91,7 @@
 - name: Create Gitea Actions Runner
   containers.podman.podman_container:
     name: gitea_runner
-    image: docker.gitea.com/act_runner:nightly
+    image: docker.gitea.com/act_runner:latest
     state: started
     restart_policy: always
     network: gitea_net
@@ -101,10 +102,20 @@
     env:
       CONFIG_FILE: /config.yml
       DOCKER_HOST: unix:///var/run/user/1000/docker.sock
-      GITEA_INSTANCE_URL: http://gitea:3000/
+      GITEA_INSTANCE_URL: http://git.barmin-home.local:3000/
+      GITEA_RUNNER_NAME: "Main Runner"
       DOCKERD_ROOTLESS_ROOTLESSKIT_NET: slirp4netns
       DOCKERD_ROOTLESS_ROOTLESSKIT_MTU: 65520
       GITEA_RUNNER_REGISTRATION_TOKEN: "{{ gitea_runner_registration_token }}"
+
+# If doesn't work, apply manually
+- name: Fix Gitea actions runner
+  ini_file:
+    path: "{{ gitea_volume_config }}/app.ini"
+    section: server
+    option: PUBLIC_URL_DETECTION
+    value: auto
+  become: true   
 
 - name: Register Gitea host in Apache2
   template: 
