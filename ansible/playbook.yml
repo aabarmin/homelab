@@ -39,4 +39,7 @@
     - podman
     - jellyfin
     - prometheus
-    - gitea
+    - role: gitea
+      become: false
+    - role: reposilite
+      become: false

@@ -1,6 +1,7 @@
 ---
 mysql_root_password: "root"
 default_owner: "abarmin"
+default_owner_uid: "1000"
 
 nextcloud_database_name: "nextcloud"
 nextcloud_database_user: "nextcloud"

@@ -1,38 +1,18 @@
 - name: Create Gitea data volume
-  file:
-    path: "{{ gitea_volume_data }}"
-    owner: abarmin
-    group: abarmin
-    mode: "0755"
-    recurse: yes
-  become: true
+  containers.podman.podman_volume:
+    name: gitea_data
 
 - name: Create Gitea config volume
-  file:
-    path: "{{ gitea_volume_config }}"
-    owner: abarmin
-    group: abarmin
-    mode: "0755"
-    recurse: yes
-  become: true
+  containers.podman.podman_volume:
+    name: gitea_config
 
 - name: Create Gitea Runner config volume
-  file:
-    path: "{{ gitea_runner_volume_config }}"
-    owner: abarmin
-    group: abarmin
-    mode: "0755"
-    recurse: yes
-  become: true
+  containers.podman.podman_volume:
+    name: gitea_runner_data
 
 - name: Create Gitea Runner data volume
-  file:
-    path: "{{ gitea_runner_volume_data }}"
-    owner: abarmin
-    group: abarmin
-    mode: "0755"
-    recurse: yes
-  become: true
+  containers.podman.podman_volume:
+    name: gitea_runner_config
 
 - name: Create Gitea network
   containers.podman.podman_network:
@@ -56,6 +36,19 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
 
+- name: Copy runner config to temp file
+  template:
+    src: templates/runner-config.yml.j2
+    dest: /tmp/runner-config.yml
+
+- name: Copy config into podman volume
+  command: >
+    podman run --rm
+      -v gitea_runner_config:/config
+      -v /tmp/runner-config.yml:/tmp/config.yml
+      alpine
+      cp /tmp/config.yml /config/config.yml
+
 - name: Ensure Gitea container is running
   containers.podman.podman_container:
     name: gitea
@@ -75,18 +68,10 @@
       - "3222:3000"
       - "2222:2222"
     volumes:
-      - "{{ gitea_volume_data }}:/var/lib/gitea"
-      - "{{ gitea_volume_config }}:/etc/gitea"
+      - "gitea_data:/var/lib/gitea"
+      - "gitea_config:/etc/gitea"
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-
-- name: Copy Gitea Actions Runner Config
-  template: 
-    src: templates/runner-config.yml.j2
-    dest: "{{ gitea_runner_volume_config }}/runner-config.yml"
-    mode: '0755'
-    owner: abarmin
-    group: abarmin
 
 - name: Create Gitea Actions Runner
   containers.podman.podman_container:
@@ -96,11 +81,11 @@
     restart_policy: always
     network: gitea_net
     volumes:
-      - "{{ gitea_runner_volume_data }}:/data"
-      - /run/podman/podman.sock:/var/run/user/1000/docker.sock
-      - "{{ gitea_runner_volume_config }}/runner-config.yml:/config.yml"
+      - "gitea_runner_data:/data"
+      - "gitea_runner_config:/config"
+      - "/run/user/1000/podman/podman.sock:/var/run/user/1000/docker.sock"
     env:
-      CONFIG_FILE: /config.yml
+      CONFIG_FILE: /config/config.yml
       DOCKER_HOST: unix:///var/run/user/1000/docker.sock
       GITEA_INSTANCE_URL: http://git.barmin-home.local:3000/
       GITEA_RUNNER_NAME: "Main Runner"
@@ -108,14 +93,14 @@
       DOCKERD_ROOTLESS_ROOTLESSKIT_MTU: 65520
       GITEA_RUNNER_REGISTRATION_TOKEN: "{{ gitea_runner_registration_token }}"
 
-# If doesn't work, apply manually
-- name: Fix Gitea actions runner
-  ini_file:
-    path: "{{ gitea_volume_config }}/app.ini"
-    section: server
-    option: PUBLIC_URL_DETECTION
-    value: auto
-  become: true   
+- name: Fix PUBLIC_URL_DETECTION in gitea app.ini without duplicates
+  command: >
+    podman run --rm
+      -v gitea_config:/etc/gitea
+      alpine sh -c "
+        grep -q '^PUBLIC_URL_DETECTION' /etc/gitea/app.ini || 
+        sed -i '/^\[server\]/a PUBLIC_URL_DETECTION = auto' /etc/gitea/app.ini
+      "
 
 - name: Register Gitea host in Apache2
   template: 

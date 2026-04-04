@@ -1,0 +1,31 @@
+- name: Create Reposilite data volume
+  file:
+    path: "{{ reposilite_volume_data }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
+  become: true
+
+- name: Ensure Reposilite container is running
+  containers.podman.podman_container:
+    name: reposilite
+    image: docker.io/dzikoysk/reposilite:3.5.28
+    state: started
+    hostname: reposilite.barmin-home.local
+    restart_policy: always
+    network: gitea_net
+    env:
+      REPOSILITE_OPTS: "--token {{ reposilite_user_name }}:{{ reposilite_user_password }}"
+    ports:
+      - "38080:8080"
+    volumes:
+      - "{{ reposilite_volume_data }}:/app/data:Z"
+
+- name: Register Reposilite host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/009-reposilite.conf
+
+- name: Enable Reposilite website in Apache2
+  shell: /usr/sbin/a2ensite 009-reposilite

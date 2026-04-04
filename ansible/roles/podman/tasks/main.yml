@@ -11,3 +11,35 @@
     mode: "0755"
     recurse: yes
   become: true
+
+- name: Ensure user has linger enabled
+  command: "loginctl enable-linger {{ default_owner_uid }}"
+  become: true
+
+- name: Ensure XDG_RUNTIME_DIR is set
+  set_fact:
+    podman_runtime_dir: "/run/user/{{ default_owner_uid }}"
+
+- name: Enable podman socket (user)
+  become: false
+  environment:
+    XDG_RUNTIME_DIR: "{{ podman_runtime_dir }}"
+  command: systemctl --user enable podman.socket
+
+- name: Start podman socket (user)
+  become: false
+  environment:
+    XDG_RUNTIME_DIR: "{{ podman_runtime_dir }}"
+  command: systemctl --user start podman.socket
+
+- name: Check podman socket status
+  become: false
+  environment:
+    XDG_RUNTIME_DIR: "{{ podman_runtime_dir }}"
+  command: systemctl --user is-active podman.socket
+  register: podman_socket_status
+  changed_when: false
+
+- name: Debug podman socket status
+  debug:
+    msg: "Podman socket status: {{ podman_socket_status.stdout }}"
