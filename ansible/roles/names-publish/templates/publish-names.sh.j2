@@ -11,3 +11,4 @@ IP=$(hostname -I | awk '{print $1}')
 /usr/bin/avahi-publish -a -R prometheus.barmin-home.local "${IP}" &
 /usr/bin/avahi-publish -a -R git.barmin-home.local "${IP}" &
 /usr/bin/avahi-publish -a -R reposilite.barmin-home.local "${IP}" &
+/usr/bin/avahi-publish -a -R jenkins.barmin-home.local "${IP}" &

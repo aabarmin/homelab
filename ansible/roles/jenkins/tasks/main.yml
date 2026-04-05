@@ -1,0 +1,53 @@
+- name: Create Jenkins data volume
+  file:
+    path: "{{ jenkins_volume_data }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
+  become: true
+
+- name: Create build directory
+  file:
+    path: /tmp/jenkins-podman-build
+    state: directory
+
+- name: Render Dockerfile
+  template:
+    src: Dockerfile.j2
+    dest: /tmp/jenkins-podman-build/Dockerfile
+
+- name: Build Jenkins image with Podman
+  containers.podman.podman_image:
+    name: "{{ jenkins_image_name }}"
+    path: /tmp/jenkins-podman-build
+    build:
+      format: docker
+  become: true
+
+- name: Run Jenkins container
+  containers.podman.podman_container:
+    name: jenkins
+    image: "{{ jenkins_image_name }}"
+    state: started
+    hostname: jenkins.barmin-home.local
+    restart_policy: always
+    network: gitea_net
+    env:
+      CONTAINER_HOST: "unix:///run/podman/podman.sock"
+    ports:
+      - "48080:8080"
+    volumes:
+      - "{{ jenkins_volume_data }}:/var/jenkins_home"
+      - "/run/podman/podman.sock:/run/podman/podman.sock"
+  become: true
+
+- name: Register Jenkins host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/010-jenkins.conf
+  become: true
+
+- name: Enable Jenkins website in Apache2
+  shell: /usr/sbin/a2ensite 010-jenkins
+  become: true

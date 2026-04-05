@@ -1,0 +1,2 @@
+jenkins_image_name: abarmin_jenkins_ci
+jenkins_volume_data: /tank/nas/podman/jenkins_data/

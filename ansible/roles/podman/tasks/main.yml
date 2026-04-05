@@ -40,6 +40,8 @@
   register: podman_socket_status
   changed_when: false
 
-- name: Debug podman socket status
-  debug:
-    msg: "Podman socket status: {{ podman_socket_status.stdout }}"
+- name: Make sure rootful podman has correct permissions
+  file:
+    path: "/run/podman/podman.sock"
+    mode: "0666"
+  become: true

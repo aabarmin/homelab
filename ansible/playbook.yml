@@ -43,3 +43,5 @@
       become: false
     - role: reposilite
       become: false
+    - role: jenkins
+      become: false    

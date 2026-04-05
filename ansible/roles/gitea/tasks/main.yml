@@ -6,14 +6,6 @@
   containers.podman.podman_volume:
     name: gitea_config
 
-- name: Create Gitea Runner config volume
-  containers.podman.podman_volume:
-    name: gitea_runner_data
-
-- name: Create Gitea Runner data volume
-  containers.podman.podman_volume:
-    name: gitea_runner_config
-
 - name: Create Gitea network
   containers.podman.podman_network:
     name: gitea_net
@@ -36,19 +28,6 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
 
-- name: Copy runner config to temp file
-  template:
-    src: templates/runner-config.yml.j2
-    dest: /tmp/runner-config.yml
-
-- name: Copy config into podman volume
-  command: >
-    podman run --rm
-      -v gitea_runner_config:/config
-      -v /tmp/runner-config.yml:/tmp/config.yml
-      alpine
-      cp /tmp/config.yml /config/config.yml
-
 - name: Ensure Gitea container is running
   containers.podman.podman_container:
     name: gitea
@@ -63,7 +42,6 @@
       GITEA__database__NAME: "{{ gitea_database_name }}"
       GITEA__database__USER: "{{ gitea_database_user }}"
       GITEA__database__PASSWD: "{{ gitea_database_password }}"
-      GITEA_RUNNER_REGISTRATION_TOKEN: "{{ gitea_runner_registration_token }}"
     ports:
       - "3222:3000"
       - "2222:2222"
@@ -72,35 +50,6 @@
       - "gitea_config:/etc/gitea"
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-
-- name: Create Gitea Actions Runner
-  containers.podman.podman_container:
-    name: gitea_runner
-    image: docker.gitea.com/act_runner:latest
-    state: started
-    restart_policy: always
-    network: gitea_net
-    volumes:
-      - "gitea_runner_data:/data"
-      - "gitea_runner_config:/config"
-      - "/run/user/1000/podman/podman.sock:/var/run/user/1000/docker.sock"
-    env:
-      CONFIG_FILE: /config/config.yml
-      DOCKER_HOST: unix:///var/run/user/1000/docker.sock
-      GITEA_INSTANCE_URL: http://git.barmin-home.local:3000/
-      GITEA_RUNNER_NAME: "Main Runner"
-      DOCKERD_ROOTLESS_ROOTLESSKIT_NET: slirp4netns
-      DOCKERD_ROOTLESS_ROOTLESSKIT_MTU: 65520
-      GITEA_RUNNER_REGISTRATION_TOKEN: "{{ gitea_runner_registration_token }}"
-
-- name: Fix PUBLIC_URL_DETECTION in gitea app.ini without duplicates
-  command: >
-    podman run --rm
-      -v gitea_config:/etc/gitea
-      alpine sh -c "
-        grep -q '^PUBLIC_URL_DETECTION' /etc/gitea/app.ini || 
-        sed -i '/^\[server\]/a PUBLIC_URL_DETECTION = auto' /etc/gitea/app.ini
-      "
 
 - name: Register Gitea host in Apache2
   template: 
