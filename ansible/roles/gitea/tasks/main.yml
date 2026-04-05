@@ -1,10 +1,18 @@
 - name: Create Gitea data volume
-  containers.podman.podman_volume:
-    name: gitea_data
+  file:
+    path: "{{ gitea_volume_data }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
 
 - name: Create Gitea config volume
-  containers.podman.podman_volume:
-    name: gitea_config
+  file:
+    path: "{{ gitea_volume_config }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
 
 - name: Create Gitea network
   containers.podman.podman_network:
@@ -46,8 +54,8 @@
       - "3222:3000"
       - "2222:2222"
     volumes:
-      - "gitea_data:/var/lib/gitea"
-      - "gitea_config:/etc/gitea"
+      - "{{ gitea_volume_data }}:/var/lib/gitea"
+      - "{{ gitea_volume_config }}:/etc/gitea"
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 

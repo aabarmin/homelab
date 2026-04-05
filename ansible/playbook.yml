@@ -39,9 +39,6 @@
     - podman
     - jellyfin
     - prometheus
-    - role: gitea
-      become: false
-    - role: reposilite
-      become: false
-    - role: jenkins
-      become: false    
+    - gitea
+    - reposilite
+    - jenkins 
