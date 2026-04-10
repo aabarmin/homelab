@@ -1,0 +1,15 @@
+- name: Update config backups
+  template: 
+    src: templates/backup.sh.j2
+    dest: /home/abarmin/dev/backup.sh
+    mode: '0755'
+    owner: abarmin
+    group: abarmin
+
+- name: Add a cronjob that does regular backups
+  ansible.builtin.cron:
+    name: "Run backups"
+    job: "/home/abarmin/dev/backup.sh"
+    hour: "1"
+    minute: "0"
+    user: "root"
