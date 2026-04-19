@@ -1,0 +1,6 @@
+aml_volume_data: /tank/nas/podman/aml_data/
+aml_db_volume_data: /tank/nas/podman/aml_db_data/
+
+aml_db_username: aml_db_username
+aml_db_password: aml_db_password
+aml_db_name: aml

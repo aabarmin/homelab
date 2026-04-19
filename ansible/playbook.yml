@@ -4,12 +4,8 @@
   become: yes
   vars_files:
     - vars/default.yml  
+    - secrets.yml
   pre_tasks:
-    # - name: Update and upgrade apt packages
-    #   apt:
-    #     update_cache: yes
-    #     upgrade: dist
-
     - name: Create a directory for the repository
       file:
         path: /home/abarmin/dev
@@ -27,6 +23,7 @@
   roles:
     - lamp
     - phpmyadmin
+    - cloudflared
     - bt-abarmin-pro
     - abarmin-pro
     - nas
@@ -42,3 +39,4 @@
     - gitea
     - reposilite
     - jenkins 
+    - allmylinks-co-uk
