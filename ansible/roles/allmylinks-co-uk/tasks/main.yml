@@ -44,7 +44,7 @@
 - name: Ensure AML container is up and running
   containers.podman.podman_container:
     name: aml_service
-    image: ghcr.io/aabarmin/allmylinks.co.uk:sha-e6dfabb
+    image: ghcr.io/aabarmin/allmylinks.co.uk:sha-fa626ba
     state: started
     restart_policy: always
     network: aml_net,cloudflared_net
