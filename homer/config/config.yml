@@ -70,6 +70,12 @@ services:
         tag: "iot"
         url: "http://ha.barmin-home.local"
         target: "_blank"
+      - name: "Documents"
+        subtitle: "Paperless-NGX"
+        icon: "fa-brands fa-dochub"
+        tag: "docs"
+        url: "http://paperless.barmin-home.local"
+        target: "_blank"
   - name: "Services"
     icon: "fas fa-solid fa-gear"
     items: 

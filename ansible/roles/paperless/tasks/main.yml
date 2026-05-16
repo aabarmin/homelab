@@ -1,0 +1,78 @@
+- name: Create Parperless data volume
+  file:
+    path: "{{ paperless_volume_data }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
+
+- name: Create Parperless media volume
+  file:
+    path: "{{ paperless_volume_media }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
+
+- name: Create Parperless export volume
+  file:
+    path: "{{ paperless_volume_export }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
+
+- name: Create Parperless consume volume
+  file:
+    path: "{{ paperless_volume_consume }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
+
+- name: Create MySQL database for Parperless
+  community.mysql.mysql_db:
+    name: "{{ paperless_database_name }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Create MySQL user and grant privileges to Parperless
+  community.mysql.mysql_user:
+    name: "{{ paperless_database_user }}"
+    password: "{{ paperless_database_password }}"
+    priv: "{{ paperless_database_name }}.*:ALL"
+    state: present
+    host: '%'
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Ensure Parperless container is running
+  containers.podman.podman_container:
+    name: paperless_service
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    state: started
+    hostname: paperless.barmin-home.local
+    restart_policy: always
+    env:
+      PAPERLESS_REDIS: "redis://host.containers.internal:6379"
+      PAPERLESS_DBENGINE: mariadb
+      PAPERLESS_DBHOST: "host.containers.internal"
+      PAPERLESS_DBUSER: "{{ paperless_database_user }}"
+      PAPERLESS_DBPASS: "{{ paperless_database_password }}"
+      PAPERLESS_DBPORT: 3306
+    ports:
+      - "28000:8000"
+    volumes:
+      - "{{ paperless_volume_data }}:/usr/src/paperless/data"
+      - "{{ paperless_volume_media }}:/usr/src/paperless/media"
+      - "{{ paperless_volume_export }}:/usr/src/paperless/export"
+      - "{{ paperless_volume_consume }}:/usr/src/paperless/consume"
+
+- name: Register Parperless host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/010-paperless.conf
+
+- name: Enable Parperless website in Apache2
+  shell: /usr/sbin/a2ensite 010-paperless

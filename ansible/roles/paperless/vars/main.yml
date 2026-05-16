@@ -1,0 +1,8 @@
+paperless_database_user: "paperless"
+paperless_database_name: "paperless"
+paperless_database_password: "paperless_password"
+
+paperless_volume_data: /tank/nas/podman/paperless_data/
+paperless_volume_media: /tank/nas/podman/paperless_media/
+paperless_volume_export: /tank/nas/podman/paperless_export/
+paperless_volume_consume: /tank/nas/podman/paperless_consume/
