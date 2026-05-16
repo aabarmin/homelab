@@ -1,3 +1,8 @@
+- name: Install Bluetooth utils
+  apt:
+    name: bluez
+    state: present
+
 - name: Create HA data volume
   file:
     path: "{{ ha_volume_config }}"
@@ -12,13 +17,17 @@
     image: ghcr.io/home-assistant/home-assistant:stable
     state: started
     restart_policy: always
+    privileged: true
+    network: host
     env:
       TZ: Europe/London
     ports:
       - "18123:8123"
+      - "21063:21063"
     volumes:
       - "{{ ha_volume_config }}:/config"
       - "/run/dbus:/run/dbus:ro"
+      - "/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket"
 
 - name: Register HA host in Apache2
   template: 

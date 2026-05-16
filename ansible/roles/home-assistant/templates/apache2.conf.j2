@@ -4,17 +4,17 @@
     ProxyPreserveHost On
     ProxyRequests Off
 
-    ProxyPass / http://127.0.0.1:18123/
-    ProxyPassReverse / http://127.0.0.1:18123/
+    ProxyPass / http://127.0.0.1:8123/
+    ProxyPassReverse / http://127.0.0.1:8123/
 
-    ProxyPass /api/websocket ws://localhost:18123/api/websocket
-    ProxyPassReverse /api/websocket ws://localhost:18123/api/websocket
+    ProxyPass /api/websocket ws://localhost:8123/api/websocket
+    ProxyPassReverse /api/websocket ws://localhost:8123/api/websocket
 
     RewriteEngine on
     RewriteCond %{HTTP:Upgrade} =websocket [NC]
-    RewriteRule /(.*)  ws://localhost:18123/$1 [P,L]
+    RewriteRule /(.*)  ws://localhost:8123/$1 [P,L]
     RewriteCond %{HTTP:Upgrade} !=websocket [NC]
-    RewriteRule /(.*)  http://localhost:18123/$1 [P,L]
+    RewriteRule /(.*)  http://localhost:8123/$1 [P,L]
 
     CustomLog /var/log/apache2/ha_access.log combined
     ErrorLog /var/log/apache2/has_error.log
