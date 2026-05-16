@@ -1,0 +1,29 @@
+- name: Create HA data volume
+  file:
+    path: "{{ ha_volume_config }}"
+    owner: abarmin
+    group: abarmin
+    mode: "0755"
+    recurse: yes
+
+- name: Ensure HA container is up and running
+  containers.podman.podman_container:
+    name: ha_service
+    image: ghcr.io/home-assistant/home-assistant:stable
+    state: started
+    restart_policy: always
+    env:
+      TZ: Europe/London
+    ports:
+      - "18123:8123"
+    volumes:
+      - "{{ ha_volume_config }}:/config"
+      - "/run/dbus:/run/dbus:ro"
+
+- name: Register HA host in Apache2
+  template: 
+    src: templates/apache2.conf.j2
+    dest: /etc/apache2/sites-available/009-ha.conf
+
+- name: Enable HA website in Apache2
+  shell: /usr/sbin/a2ensite 009-ha

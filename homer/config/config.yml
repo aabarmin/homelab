@@ -64,6 +64,12 @@ services:
         tag: "media"
         url: "http://media.barmin-home.local"
         target: "_blank"
+      - name: "IoT and Automation"
+        subtitle: "Home Assistant"
+        icon: "fa-brands fa-hubspot"
+        tag: "iot"
+        url: "http://ha.barmin-home.local"
+        target: "_blank"
   - name: "Services"
     icon: "fas fa-solid fa-gear"
     items: 

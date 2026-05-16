@@ -21,22 +21,21 @@
         state: restarted
 
   roles:
-    - lamp
-    - phpmyadmin
-    - cloudflared
-    - bt-abarmin-pro
-    - abarmin-pro
-    - nas
-    - nfs
-    - golang
-    - imaginary
-    - nextcloud
-    - nextcloud-backup
+    # - lamp
+    # - phpmyadmin
+    # - cloudflared
+    # - bt-abarmin-pro
+    # - abarmin-pro
+    # - nas
+    # - nfs
+    # - golang
+    # - imaginary
+    # - nextcloud
+    # - nextcloud-backup
     - names-publish
-    - podman
-    - jellyfin
-    - prometheus
-    - gitea
-    - reposilite
-    - jenkins 
-    - allmylinks-co-uk
+    - home-assistant
+    # - podman
+    # - jellyfin
+    # - prometheus
+    # - gitea
+    # - allmylinks-co-uk
