@@ -55,6 +55,7 @@
     hostname: paperless.barmin-home.local
     restart_policy: always
     env:
+      PAPERLESS_OCR_LANGUAGES: "rus"
       PAPERLESS_REDIS: "redis://host.containers.internal:6379"
       PAPERLESS_DBENGINE: mariadb
       PAPERLESS_DBHOST: "host.containers.internal"
