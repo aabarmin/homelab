@@ -5,7 +5,7 @@
 
 - name: Create directory to store podman volumes
   file:
-    path: "/tank/nas/podman/"
+    path: "/home/abarmin/podman/"
     owner: abarmin
     group: abarmin
     mode: "0755"
